@@ -1,18 +1,24 @@
 name: Build and publish Docker image
 
 on:
-  release:
-    types: [published]
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
+  # Called by release.yml after semantic-release creates a new version
+  workflow_call:
+    inputs:
+      version:
+        description: 'Version to tag the image with'
+        required: true
+        type: string
+      is_dev:
+        description: 'Is this a dev release'
+        required: false
+        type: boolean
+        default: false
+
+  # Manual trigger for building specific tags
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Git tag (e.g. v0.1.9). If set, a versioned image will be built from this tag.'
+        description: 'Git tag (e.g. v0.3.0). If set, a versioned image will be built from this tag.'
         required: false
         type: string
       mark_as_latest:
@@ -20,19 +26,16 @@ on:
         required: false
         type: boolean
         default: false
-  workflow_call:
 
 jobs:
   lint:
     name: Lint Python project
     uses: ./.github/workflows/python-lint.yml
+    # Only run lint for manual dispatches (release.yml already runs it)
+    if: ${{ github.event_name == 'workflow_dispatch' }}
     with:
       python-version: "3.13"
-      # Use the same ref as the image build:
-      # - release: use the release tag
-      # - workflow_dispatch with tag: use that tag
-      # - other events: empty => default ref (branch)
-      ref: ${{ github.event_name == 'release' && github.event.release.tag_name || (github.event_name == 'workflow_dispatch' && github.event.inputs.tag || '') }}
+      ref: ${{ github.event.inputs.tag || '' }}
 
   build-and-push:
     name: Build image and push
@@ -40,18 +43,11 @@ jobs:
     permissions:
       contents: read
       packages: write
-    if: ${{ github.event_name != 'pull_request' }}
     needs: [lint]
+    # For workflow_call, lint job is skipped, so we need conditional needs
+    if: ${{ always() && (needs.lint.result == 'success' || needs.lint.result == 'skipped') }}
 
     steps:
-      # Checkout for release events (use the release tag)
-      - name: Checkout code for release
-        if: ${{ github.event_name == 'release' }}
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          ref: ${{ github.event.release.tag_name }}
-
       # Checkout for manual runs with explicit tag
       - name: Checkout code for manual tag build
         if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '' }}
@@ -60,9 +56,9 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.tag }}
 
-      # Default checkout (e.g. push on main, workflow_call, manual run without tag)
+      # Default checkout (workflow_call, manual run without tag)
       - name: Checkout code (default)
-        if: ${{ !(github.event_name == 'release') && !(github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '') }}
+        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '') }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -70,16 +66,19 @@ jobs:
       - name: Determine VERSION and repository name
         run: |
           VERSION=""
-          if [[ "${{ github.event_name }}" == "release" ]]; then
-            VERSION="${{ github.event.release.tag_name }}"
+
+          # workflow_call from release.yml
+          if [[ "${{ github.event_name }}" == "workflow_call" || -n "${{ inputs.version }}" ]]; then
+            VERSION="${{ inputs.version }}"
+          # Manual workflow_dispatch with tag
           elif [[ "${{ github.event_name }}" == "workflow_dispatch" && -n "${{ github.event.inputs.tag }}" ]]; then
             VERSION="${{ github.event.inputs.tag }}"
-          fi
-
-          if [[ -n "$VERSION" ]]; then
             # Strip refs/tags/ and a leading "v"
             VERSION="${VERSION#refs/tags/}"
             VERSION="${VERSION#v}"
+          fi
+
+          if [[ -n "$VERSION" ]]; then
             echo "Version is $VERSION"
             echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           fi
@@ -103,21 +102,26 @@ jobs:
       - name: Determine tags
         run: |
           if [[ -n "${VERSION:-}" ]]; then
-            # Versioned image for release or manual tag run
             TAGS="ghcr.io/${{ env.REPO_NAME }}:${VERSION}"
 
-            # Always mark releases as latest
-            if [[ "${{ github.event_name }}" == "release" ]]; then
-              TAGS="$TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
-            # For manual runs: mark as latest only if requested
-            elif [[ "${{ github.event_name }}" == "workflow_dispatch" && "${{ github.event.inputs.mark_as_latest }}" == 'true' ]]; then
+            # Check if this is a dev release (from release.yml)
+            if [[ "${{ inputs.is_dev }}" == "true" ]]; then
+              # Dev release: version tag + dev tag
+              TAGS="$TAGS,ghcr.io/${{ env.REPO_NAME }}:dev"
+            elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+              # Manual dispatch: optionally mark as latest
+              if [[ "${{ github.event.inputs.mark_as_latest }}" == 'true' ]]; then
+                TAGS="$TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
+              fi
+            else
+              # Production release from release.yml: version tag + latest tag
               TAGS="$TAGS,ghcr.io/${{ env.REPO_NAME }}:latest"
             fi
 
             echo "TAGS=$TAGS" >> "$GITHUB_ENV"
-          elif [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
-            # Dev image for pushes to main (and equivalent contexts)
-            echo "TAGS=ghcr.io/${{ env.REPO_NAME }}:dev" >> "$GITHUB_ENV"
+          else
+            echo "No version specified, skipping build"
+            exit 1
           fi
 
       - name: Build and push
