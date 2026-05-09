@@ -6,6 +6,7 @@ import uuid
 from collections import Counter
 
 from flask import Flask, request, render_template, redirect, url_for
+from flask_cors import CORS
 
 from config import (
     BASE_URL,
@@ -15,6 +16,7 @@ from config import (
     EXTERNAL_SPOOL_ID,
     PRINTER_NAME,
     CLEAR_ASSIGNMENT_WHEN_EMPTY,
+    LIVE_READONLY,
 )
 from filament import generate_filament_brand_code, generate_filament_temperatures
 from frontend_utils import color_is_dark
@@ -32,7 +34,7 @@ if test_data.TEST_MODE_FLAG:
   _TEST_PATCH_CONTEXT = test_data.activate_test_data_patches()
 
 USE_TEST_DATA = test_data.test_data_active()
-READ_ONLY_MODE = (not USE_TEST_DATA) and os.getenv("OPENSPOOLMAN_LIVE_READONLY") == "1"
+READ_ONLY_MODE = (not USE_TEST_DATA) and LIVE_READONLY
 
 LAYER_TRACKING_STATUS_DISPLAY = {
     "RUNNING": ("Printing", "warning"),
@@ -717,6 +719,20 @@ def print_select_spool():
     traceback.print_exc()
     return render_template('error.html', exception=str(e))
 
-# Register REST API blueprint
+# Register legacy REST API blueprint (for backwards compatibility)
 from api_routes import api_bp
 app.register_blueprint(api_bp)
+
+# Register new modular API v1 blueprints
+from api.v1 import register_api_blueprints
+register_api_blueprints(app)
+
+# Enable CORS for API endpoints
+CORS(app, resources={r"/api/*": {"origins": "*"}})
+
+# Start SSE state monitor for real-time updates
+from api.v1.realtime import start_state_monitor
+start_state_monitor(interval=2.0)
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=8000, debug=True, threaded=True)

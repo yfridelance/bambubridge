@@ -1,6 +1,8 @@
+# BambuBridge (formerly OpenSpoolMan)
+# Note: Update repository URL after Docker image is migrated
 image:
   pullPolicy: IfNotPresent
-  repository: ghcr.io/drndos/openspoolman
+  repository: ghcr.io/xento/bambubridge
 portal:
   open:
     enabled: false

@@ -1,0 +1,55 @@
+/* Reduce content area padding and ensure top alignment */
+.ant-layout-content {
+  padding: 16px 24px !important;
+  margin: 0 !important;
+}
+
+/* Content wrapper inside Layout.Content */
+.ant-layout-content > div {
+  padding: 16px !important;
+  min-height: auto !important;
+}
+
+/* Remove empty space from breadcrumb wrapper */
+.ant-breadcrumb:empty,
+.ant-breadcrumb-wrapper:empty,
+[class*="breadcrumb"]:empty {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Compact header spacing */
+.ant-layout-header {
+  padding: 0 !important;
+  height: 48px !important;
+  line-height: 48px !important;
+}
+
+/* Refine page header - reduce space */
+.refine-page-header,
+.ant-page-header {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+}
+
+/* Ensure main layout content aligns to top, not center */
+.ant-layout > .ant-layout {
+  margin: 0 !important;
+  justify-content: flex-start !important;
+}
+
+/* Force top alignment in content areas */
+.ant-layout-content {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: flex-start !important;
+  align-items: stretch !important;
+}
+
+/* Sidebar logo container border */
+.ant-layout-sider .ant-layout-sider-children > div:first-child {
+  border-bottom: 1px solid rgb(66, 66, 66);
+}
+

@@ -1,5 +1,4 @@
 import json
-import os
 import traceback
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -9,12 +8,12 @@ import mqtt_bambulab
 import spoolman_client
 import spoolman_service
 import test_data
-from config import EXTERNAL_SPOOL_AMS_ID, EXTERNAL_SPOOL_ID, PRINTER_ID, PRINTER_NAME
+from config import EXTERNAL_SPOOL_AMS_ID, EXTERNAL_SPOOL_ID, PRINTER_ID, PRINTER_NAME, LIVE_READONLY
 
 API_VERSION = "v1"
 api_bp = Blueprint("api", __name__, url_prefix=f"/api/{API_VERSION}")
 
-READ_ONLY_MODE = (not test_data.test_data_active()) and os.getenv("OPENSPOOLMAN_LIVE_READONLY") == "1"
+READ_ONLY_MODE = (not test_data.test_data_active()) and LIVE_READONLY
 ACTIVE_PRINTER_ID = (PRINTER_ID or "").upper() or "PRINTER_1"
 
 
@@ -27,7 +26,13 @@ def json_error(code: str, message: str, status: int = 400):
 
 
 def _printer_matches(printer_id: str) -> bool:
-  return str(printer_id or "").upper() == ACTIVE_PRINTER_ID
+  """Check if the given printer_id matches the active printer.
+
+  Accepts both the actual printer serial number and 'PRINTER_1' as valid IDs
+  since this system supports only one printer.
+  """
+  normalized = str(printer_id or "").upper()
+  return normalized == ACTIVE_PRINTER_ID or normalized == "PRINTER_1"
 
 
 def _clean_json_value(value: Any) -> Any:
@@ -209,18 +214,19 @@ def api_list_printers():
     return json_error("PRINTER_FETCH_FAILED", f"Failed to load printer info: {exc}", 500)
 
 
-@api_bp.route("/printers/<printer_id>/ams", methods=["GET"])
-def api_get_ams(printer_id: str):
-  if not _printer_matches(printer_id):
-    return json_error("PRINTER_NOT_FOUND", f"Printer '{printer_id}' not found", 404)
-
-  try:
-    trays, _ = _load_trays()
-    payload = {"printer_id": ACTIVE_PRINTER_ID, "ams_slots": trays}
-    return json_success(payload)
-  except Exception as exc:
-    traceback.print_exc()
-    return json_error("AMS_FETCH_FAILED", f"Failed to fetch AMS data: {exc}", 500)
+# NOTE: AMS endpoint moved to api/v1/ams.py with new response format (ams_units/external_tray)
+# Legacy endpoint kept commented for reference:
+# @api_bp.route("/printers/<printer_id>/ams", methods=["GET"])
+# def api_get_ams(printer_id: str):
+#   if not _printer_matches(printer_id):
+#     return json_error("PRINTER_NOT_FOUND", f"Printer '{printer_id}' not found", 404)
+#   try:
+#     trays, _ = _load_trays()
+#     payload = {"printer_id": ACTIVE_PRINTER_ID, "ams_slots": trays}
+#     return json_success(payload)
+#   except Exception as exc:
+#     traceback.print_exc()
+#     return json_error("AMS_FETCH_FAILED", f"Failed to fetch AMS data: {exc}", 500)
 
 
 @api_bp.route("/spools", methods=["GET"])

@@ -1,5 +1,6 @@
+# BambuBridge (formerly OpenSpoolMan)
 services:
-  openspoolman:
+  bambubridge:
     build: .
     env_file: "config.env"
     ports:

@@ -1,4 +1,4 @@
-# OpenSpoolman JSON API
+# BambuBridge JSON API
 
 Alle Endpoints liegen unter `/api/v1` und geben folgendes Schema zurück:
 
@@ -83,7 +83,7 @@ Antwort:
 ```
 
 Fehlerbeispiele:
-- 403 `READ_ONLY_MODE` wenn `OPENSPOOLMAN_LIVE_READONLY=1`
+- 403 `READ_ONLY_MODE` wenn `BAMBUBRIDGE_LIVE_READONLY=1`
 - 404 `PRINTER_NOT_FOUND` oder `TRAY_NOT_FOUND`
 - 404 `SPOOL_NOT_FOUND`
 - 503 `PRINTER_OFFLINE` wenn MQTT-Verbindung fehlt
@@ -106,4 +106,4 @@ Antwort:
 
 Fehlerbeispiele:
 - 404 `SPOOL_NOT_FOUND` wenn keine Spule gefunden wurde
-- 403 `READ_ONLY_MODE` wenn `OPENSPOOLMAN_LIVE_READONLY=1`
+- 403 `READ_ONLY_MODE` wenn `BAMBUBRIDGE_LIVE_READONLY=1`

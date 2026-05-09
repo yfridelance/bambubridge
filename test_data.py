@@ -11,11 +11,13 @@ import pytest
 from config import (
     EXTERNAL_SPOOL_AMS_ID,
     EXTERNAL_SPOOL_ID,
+    TEST_DATA_ENABLED,
+    TEST_SNAPSHOT_PATH,
 )
 from spoolman_service import augmentTrayDataWithSpoolMan, trayUid
 
-TEST_MODE_FLAG = os.getenv("OPENSPOOLMAN_TEST_DATA") == "1"
-SNAPSHOT_PATH = Path(os.getenv("OPENSPOOLMAN_TEST_SNAPSHOT") or Path("data") / "live_snapshot.json")
+TEST_MODE_FLAG = TEST_DATA_ENABLED
+SNAPSHOT_PATH = Path(TEST_SNAPSHOT_PATH or Path("data") / "live_snapshot.json")
 
 _TEST_PRINTER_ID = os.getenv("PRINTER_ID", "TEST-PRINTER")
 _PATCH_ACTIVE = False

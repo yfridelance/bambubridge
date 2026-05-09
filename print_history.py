@@ -1,18 +1,17 @@
-import os
 import sqlite3
 from datetime import datetime
 from pathlib import Path
 
+from config import PRINT_HISTORY_DB
+
 DEFAULT_DB_NAME = "3d_printer_logs.db"
-DB_ENV_VAR = "OPENSPOOLMAN_PRINT_HISTORY_DB"
 
 
 def _default_db_path() -> Path:
     """Resolve the print history database path, allowing an env override."""
 
-    env_path = os.getenv(DB_ENV_VAR)
-    if env_path:
-        return Path(env_path).expanduser().resolve()
+    if PRINT_HISTORY_DB:
+        return Path(PRINT_HISTORY_DB).expanduser().resolve()
 
     return Path(__file__).resolve().parent / "data" / DEFAULT_DB_NAME
 

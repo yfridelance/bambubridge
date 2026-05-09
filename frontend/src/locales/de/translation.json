@@ -1,0 +1,102 @@
+{
+  "common": {
+    "loading": "Laden...",
+    "error": "Fehler",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "search": "Suchen",
+    "filter": "Filter",
+    "refresh": "Aktualisieren",
+    "back": "Zurück",
+    "confirm": "Bestätigen",
+    "yes": "Ja",
+    "no": "Nein"
+  },
+  "nav": {
+    "home": "Übersicht",
+    "spools": "Spulen",
+    "prints": "Druckverlauf",
+    "tags": "NFC-Tags",
+    "settings": "Einstellungen"
+  },
+  "home": {
+    "title": "AMS-Übersicht",
+    "externalSpool": "Externe Spule",
+    "tray": "Fach",
+    "empty": "Leer",
+    "fill": "Füllen",
+    "assign": "Zuweisen",
+    "linkToSpoolman": "Mit Spoolman verknüpfen",
+    "unknownSpool": "Unbekannte Spule erkannt",
+    "remaining": "Verbleibend",
+    "humidity": "Feuchtigkeit",
+    "temperature": "Temperatur"
+  },
+  "spool": {
+    "title": "Spulen",
+    "name": "Name",
+    "material": "Material",
+    "vendor": "Hersteller",
+    "color": "Farbe",
+    "remaining": "Verbleibend",
+    "location": "Standort",
+    "lastUsed": "Zuletzt verwendet",
+    "tag": "Tag-ID",
+    "noTag": "Kein Tag zugewiesen",
+    "assignedTo": "Zugewiesen an",
+    "notAssigned": "Nicht zugewiesen"
+  },
+  "print": {
+    "title": "Druckverlauf",
+    "fileName": "Dateiname",
+    "date": "Datum",
+    "type": "Typ",
+    "status": "Status",
+    "filament": "Filament",
+    "cost": "Kosten",
+    "layers": "Schichten",
+    "progress": "Fortschritt",
+    "cloud": "Cloud",
+    "local": "Lokal",
+    "running": "Druckt",
+    "completed": "Fertig",
+    "aborted": "Abgebrochen",
+    "failed": "Fehlgeschlagen"
+  },
+  "tag": {
+    "title": "NFC-Tags",
+    "assignTag": "Tag zuweisen",
+    "writeTag": "Tag beschreiben",
+    "linkBambu": "Bambu-Spule verknüpfen",
+    "generateNew": "Neuen Tag generieren",
+    "tagId": "Tag-ID",
+    "scanTag": "NFC-Tag scannen",
+    "writeToTag": "Auf Tag schreiben",
+    "tagWritten": "Tag erfolgreich beschrieben",
+    "tagLinked": "Tag erfolgreich verknüpft"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "printer": "Drucker",
+    "printerStatus": "Drucker-Status",
+    "online": "Online",
+    "offline": "Offline",
+    "spoolman": "Spoolman-URL",
+    "autoSpend": "Filament automatisch verbuchen"
+  },
+  "error": {
+    "printerOffline": "Drucker ist offline. Bitte Verbindung prüfen.",
+    "fetchFailed": "Daten konnten nicht geladen werden",
+    "saveFailed": "Änderungen konnten nicht gespeichert werden",
+    "notFound": "Nicht gefunden"
+  },
+  "alert": {
+    "colorMismatch": "Farbabweichung",
+    "materialMismatch": "Materialabweichung",
+    "unmappedTag": "Nicht zugeordneter Bambu-Tag"
+  }
+}

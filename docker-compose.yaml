@@ -1,6 +1,8 @@
+# BambuBridge (formerly OpenSpoolMan)
+# Bambu Lab Filament Bridge - Connect SpoolMan with Bambu Lab printers
 version: "3"
 services:
-  openspoolman:
+  bambubridge:
     build: .
     env_file: "config.env"
     ports:

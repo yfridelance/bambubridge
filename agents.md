@@ -1,13 +1,26 @@
-# agents.md — OpenSpoolMan
+# agents.md — BambuBridge (formerly OpenSpoolMan)
 
-This document is for AI coding agents (and humans) making changes to **OpenSpoolMan**.
-Follow it as the default “operating manual” when creating PRs.
+This document is for AI coding agents (and humans) making changes to **BambuBridge**.
+Follow it as the default "operating manual" when creating PRs.
+
+> **Note:** This project is being rebranded from "OpenSpoolMan" to "BambuBridge".
+> Environment variables with `OPENSPOOLMAN_*` prefix remain supported as aliases.
 
 ## 1) Project intent (do not drift)
-OpenSpoolMan augments SpoolMan with Bambu Lab / AMS awareness and optional NFC workflows:
+BambuBridge is a **Bambu Lab Filament Bridge** that connects:
+- **SpoolMan** (filament database and inventory management)
+- **Bambu Lab printers** (via MQTT/LAN)
+- **AMS units** (automatic filament matching and tracking)
+
+Key clarifications:
+- This is an **integration layer**, NOT a SpoolMan fork
+- SpoolMan remains the source of truth for spool data
+- BambuBridge adds Bambu Lab-specific features on top
+
+Core principles:
 - Keep all operations **local-first** (LAN where possible).
 - NFC is **optional**; the web UI must remain fully usable without NFC.
-- The system is an “adapter + UI” on top of SpoolMan, not a replacement.
+- The system is an "adapter + UI" on top of SpoolMan, not a replacement.
 
 If a proposed change alters any of these fundamentals, stop and propose it as a design discussion first.
 
@@ -33,16 +46,42 @@ If a proposed change alters any of these fundamentals, stop and propose it as a 
 ---
 
 ## 3) Repository map (high-level)
-Key folders/files you will interact with:
-- `app.py` / `wsgi.py`: application entry points
-- `templates/`, `static/`: server-rendered UI assets
+
+### Backend (Python/Flask)
+- `app.py` / `wsgi.py`: Application entry points
+- `api/v1/`: **Modular REST API blueprints**
+  - `ams.py`: AMS tray management
+  - `spools.py`: Spool CRUD operations
+  - `prints.py`: Print history
+  - `tags.py`: NFC tag management
+  - `realtime.py`: SSE for live updates
+  - `printers.py`: Printer info
+  - `settings.py`: System settings
+- `api_routes.py`: **Legacy** - kept for backwards compatibility
 - `mqtt_bambulab.py`: Bambu printer connectivity (LAN / MQTT)
 - `spoolman_client.py`, `spoolman_service.py`: SpoolMan integration layer
 - `filament.py`, `filament_usage_tracker.py`, `print_history.py`: domain logic
+
+### Frontend (React 19 + TypeScript)
+- `frontend/`: **New SPA application**
+  - `src/pages/`: Page components (Home, Spools, Prints, Tags, Settings)
+  - `src/components/`: Reusable UI components
+  - `src/providers/`: Data provider (REST) and live provider (SSE)
+  - `src/contexts/`: React contexts (Theme)
+  - `src/locales/`: I18n translations (en/de)
+  - `src/types/`: TypeScript type definitions
+- Uses Refine framework with Ant Design
+- PWA-capable (offline support)
+
+### Legacy Frontend (Jinja2)
+- `templates/`: Server-rendered HTML templates (**deprecation planned**)
+- `static/`: Static assets for legacy UI
+
+### Infrastructure
 - `scripts/`: helper scripts (e.g., initialization / tooling)
 - `data/`: runtime artifacts (DBs, mismatch logs)
 - `tests/`: Python tests
-- `e2e/`, `playwright.config.js`, `package.json`: end-to-end UI tests
+- `e2e/`, `playwright.config.js`: end-to-end UI tests
 - `docker-compose.yaml` / `compose.yaml` / `Dockerfile`: containerization
 - `helm/openspoolman`: Helm chart
 
@@ -246,5 +285,108 @@ Prefer these options, in order:
 1. Add instrumentation and tests rather than guessing.
 2. Make the smallest change that improves correctness.
 3. Document assumptions in the PR description and in code comments where necessary.
+
+---
+
+## 14) Frontend development guidelines
+
+### Technology stack
+- **React 19** + TypeScript 5.6
+- **Refine framework** (@refinedev/core 5.x, @refinedev/antd 6.x)
+- **Ant Design 5.x** - UI component library
+- **React Router 7** - Routing
+- **Vite 6** - Build tool and dev server
+- **i18next** - Internationalization (en/de)
+- **Workbox** - PWA/Service Worker
+
+### Development commands
+```bash
+cd frontend
+npm install
+npm run dev      # Start dev server (proxies /api to backend)
+npm run build    # Production build
+npm run preview  # Preview production build
+```
+
+### Conventions
+- Use functional components with hooks
+- Prefer Refine's data provider patterns for API calls
+- Follow Ant Design's design guidelines
+- Keep translations in `frontend/src/locales/`
+- Use TypeScript strict mode
+
+### API integration
+- Use the `/api/v1/` endpoints (see `api/v1/` blueprints)
+- Real-time updates via SSE (`/api/v1/realtime/events`)
+- Data provider: `frontend/src/providers/dataProvider.ts`
+- Live provider: `frontend/src/providers/liveProvider.ts`
+
+### State management
+- Use Refine's built-in state management where possible
+- React Context for global state (Theme)
+- Avoid Redux unless absolutely necessary
+
+---
+
+## 15) Dual-frontend strategy (migration notes)
+
+### Current state
+The project has two frontends:
+1. **Jinja2 templates** (`templates/`): Legacy, server-rendered
+2. **React SPA** (`frontend/`): New, feature-rich
+
+### Migration guidelines
+- **New features**: Implement in React frontend first
+- **Bug fixes**: Apply to both frontends if applicable
+- **Deprecation**: Jinja2 templates will be removed after React frontend reaches feature parity
+
+### Feature parity checklist
+- [x] Dashboard with AMS overview
+- [x] Spool list with filtering
+- [x] Print history
+- [x] Settings page
+- [ ] NFC tag management (partial)
+- [ ] Fill tray workflow
+- [ ] Issue diagnostics
+
+---
+
+## 16) API versioning
+
+### Current API structure
+- **v1 API** (`/api/v1/`): Current, stable, modular blueprints
+- **Legacy API** (`api_routes.py`): Deprecated, kept for backwards compatibility
+
+### Adding new endpoints
+1. Create or modify blueprint in `api/v1/`
+2. Register in `api/v1/__init__.py` if new blueprint
+3. Document in `docs/api.md`
+4. Add TypeScript types in `frontend/src/types/`
+
+### Response format
+All v1 endpoints should return:
+```json
+{
+  "success": true,
+  "data": { ... }
+}
+```
+Or on error:
+```json
+{
+  "success": false,
+  "error": {
+    "code": "ERROR_CODE",
+    "message": "Human-readable message"
+  }
+}
+```
+
+---
+
+## 17) Task tracking
+
+Open tasks and known issues are tracked in `TODO.md` at the repository root.
+When working on a task, update the TODO.md to reflect progress.
 
 End of file.

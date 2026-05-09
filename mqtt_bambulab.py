@@ -8,6 +8,7 @@ from typing import Any, Iterable
 
 import paho.mqtt.client as mqtt
 
+import os
 from config import (
     PRINTER_ID,
     PRINTER_CODE,
@@ -16,6 +17,7 @@ from config import (
     EXTERNAL_SPOOL_ID,
     TRACK_LAYER_USAGE,
     CLEAR_ASSIGNMENT_WHEN_EMPTY,
+    LOG_DIR,
 )
 from messages import GET_VERSION, PUSH_ALL, AMS_FILAMENT_SETTING
 from spoolman_service import spendFilaments, setActiveTray, fetchSpools, clear_active_spool_for_tray
@@ -36,7 +38,7 @@ PRINTER_STATE_LAST = {}
 
 PENDING_PRINT_METADATA = {}
 FILAMENT_TRACKER = FilamentUsageTracker()
-LOG_FILE = "/home/app/logs/mqtt.log"
+LOG_FILE = os.path.join(LOG_DIR, "mqtt.log")
 
 def getPrinterModel():
     global PRINTER_ID
@@ -450,7 +452,7 @@ def on_message(client, userdata, msg):
       }
 
     if "print" in data:
-      append_to_rotating_file("/home/app/logs/mqtt.log", _mask_mqtt_payload(msg.payload.decode()))
+      append_to_rotating_file(LOG_FILE, _mask_mqtt_payload(msg.payload.decode()))
 
     #print(data)
 

@@ -1,7 +1,7 @@
 {
-  "name": "openspoolman",
+  "name": "bambubridge",
   "version": "1.0.0",
-  "description": "Use any filament like Bambu filaments with automatic recognition and filament usage updates in your AMS!",
+  "description": "Bambu Lab Filament Bridge - Connect SpoolMan with Bambu Lab printers and AMS for automatic filament tracking",
   "main": "index.js",
   "directories": {
     "doc": "docs"
@@ -9,16 +9,22 @@
   "scripts": {},
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Xento/openspoolman.git"
+    "url": "git+https://github.com/Xento/bambubridge.git"
   },
-  "keywords": [],
+  "keywords": [
+    "bambu-lab",
+    "spoolman",
+    "filament",
+    "ams",
+    "3d-printing"
+  ],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "bugs": {
-    "url": "https://github.com/Xento/openspoolman/issues"
+    "url": "https://github.com/Xento/bambubridge/issues"
   },
-  "homepage": "https://github.com/Xento/openspoolman#readme",
+  "homepage": "https://github.com/Xento/bambubridge#readme",
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@types/node": "^24.10.1"

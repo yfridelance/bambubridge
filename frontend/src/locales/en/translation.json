@@ -1,0 +1,102 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "back": "Back",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "nav": {
+    "home": "Home",
+    "spools": "Spools",
+    "prints": "Print History",
+    "tags": "NFC Tags",
+    "settings": "Settings"
+  },
+  "home": {
+    "title": "AMS Overview",
+    "externalSpool": "External Spool",
+    "tray": "Tray",
+    "empty": "Empty",
+    "fill": "Fill",
+    "assign": "Assign",
+    "linkToSpoolman": "Link to Spoolman",
+    "unknownSpool": "Unknown spool detected",
+    "remaining": "Remaining",
+    "humidity": "Humidity",
+    "temperature": "Temperature"
+  },
+  "spool": {
+    "title": "Spools",
+    "name": "Name",
+    "material": "Material",
+    "vendor": "Vendor",
+    "color": "Color",
+    "remaining": "Remaining",
+    "location": "Location",
+    "lastUsed": "Last Used",
+    "tag": "Tag ID",
+    "noTag": "No tag assigned",
+    "assignedTo": "Assigned to",
+    "notAssigned": "Not assigned"
+  },
+  "print": {
+    "title": "Print History",
+    "fileName": "File Name",
+    "date": "Date",
+    "type": "Type",
+    "status": "Status",
+    "filament": "Filament",
+    "cost": "Cost",
+    "layers": "Layers",
+    "progress": "Progress",
+    "cloud": "Cloud",
+    "local": "Local",
+    "running": "Printing",
+    "completed": "Finished",
+    "aborted": "Cancelled",
+    "failed": "Failed"
+  },
+  "tag": {
+    "title": "NFC Tags",
+    "assignTag": "Assign Tag",
+    "writeTag": "Write Tag",
+    "linkBambu": "Link Bambu Spool",
+    "generateNew": "Generate New Tag",
+    "tagId": "Tag ID",
+    "scanTag": "Scan NFC Tag",
+    "writeToTag": "Write to Tag",
+    "tagWritten": "Tag written successfully",
+    "tagLinked": "Tag linked successfully"
+  },
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "printer": "Printer",
+    "printerStatus": "Printer Status",
+    "online": "Online",
+    "offline": "Offline",
+    "spoolman": "Spoolman URL",
+    "autoSpend": "Auto-spend filament"
+  },
+  "error": {
+    "printerOffline": "Printer is offline. Please check the connection.",
+    "fetchFailed": "Failed to fetch data",
+    "saveFailed": "Failed to save changes",
+    "notFound": "Not found"
+  },
+  "alert": {
+    "colorMismatch": "Color mismatch",
+    "materialMismatch": "Material mismatch",
+    "unmappedTag": "Unmapped Bambu tag"
+  }
+}
