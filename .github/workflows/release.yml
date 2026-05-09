@@ -58,6 +58,10 @@ jobs:
       - name: Make update script executable
         run: chmod +x scripts/update-versions.sh
 
+      - name: Configure git for this repository
+        run: |
+          git remote set-url origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+
       - name: Run semantic-release
         id: semantic
         env:
