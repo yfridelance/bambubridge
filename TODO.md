@@ -31,13 +31,13 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - **Status:** Feature deaktiviert, Evaluierung erforderlich
 
 ### Issue-Typ-Erkennung im UI
-- **Datei:** `app.py:162`
+- **Datei:** `frontend/src/pages/issues/index.tsx`
 - **Beschreibung:** Verschiedene Issue-Typen erkennen und anzeigen:
   - Neuer Bambu Lab Spool (nicht in SpoolMan)
   - Tag-Mismatch
   - Material/Typ-Mismatch
   - Farb-Mismatch
-- **Status:** Nicht implementiert
+- **Status:** ✅ Implementiert im React-Frontend
 
 ### External Spool Reset Handler
 - **Datei:** `app.py:299, 452`
@@ -58,9 +58,9 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - [x] Spool-Liste mit Filterung
 - [x] Print-Historie
 - [x] Settings-Seite
-- [ ] NFC-Tag-Management (teilweise)
-- [ ] Fill-Tray Workflow
-- [ ] Issue-Diagnostik
+- [x] NFC-Tag-Management (WriteTagPage, LinkBambuPage)
+- [x] Fill-Tray Workflow
+- [x] Issue-Diagnostik
 
 ### Nach Feature-Parität
 - [ ] Jinja2-Templates entfernen
@@ -87,7 +87,7 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - [x] `api/v1/__init__.py`
 
 ### Assets aktualisieren
-- [ ] Logo erstellen/aktualisieren
+- [x] Logo erstellen/aktualisieren
 - [ ] Favicon
 - [ ] Screenshots in Dokumentation
 
@@ -120,6 +120,10 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
   - Frontend-Branding (Title, PWA)
   - Docker/Helm umbenannt
   - GitHub Workflows aktualisiert
+- [x] Frontend-Migration Feature-Parität erreicht (2026-05-09)
+  - WriteTagPage mit Web NFC API
+  - LinkBambuPage für Bambu-Tag-Verknüpfung
+  - Issues-Seite mit Diagnose und Lösungsoptionen
 
 ---
 

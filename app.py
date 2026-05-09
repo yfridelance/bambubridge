@@ -407,8 +407,9 @@ def setActiveSpool(ams_id, tray_id, spool_data):
   else:
     ams_message["print"]["tray_color"] = ""
       
-  if "nozzle_temperature" in spool_data["filament"]["extra"]:
-    nozzle_temperature_range = spool_data["filament"]["extra"]["nozzle_temperature"].strip("[]").split(",")
+  filament_extra = spool_data["filament"].get("extra") or {}
+  if "nozzle_temperature" in filament_extra:
+    nozzle_temperature_range = filament_extra["nozzle_temperature"].strip("[]").split(",")
     ams_message["print"]["nozzle_temp_min"] = int(nozzle_temperature_range[0])
     ams_message["print"]["nozzle_temp_max"] = int(nozzle_temperature_range[1])
   else:
@@ -420,13 +421,13 @@ def setActiveSpool(ams_id, tray_id, spool_data):
   ams_message["print"]["tray_type"] = spool_data["filament"]["material"]
 
   filament_brand_code = {}
-  filament_brand_code["brand_code"] = spool_data["filament"]["extra"].get("filament_id", "").strip('"')
+  filament_brand_code["brand_code"] = filament_extra.get("filament_id", "").strip('"')
   filament_brand_code["sub_brand_code"] = ""
 
   if filament_brand_code["brand_code"] == "":
     filament_brand_code = generate_filament_brand_code(spool_data["filament"]["material"],
                                                       spool_data["filament"]["vendor"]["name"],
-                                                      spool_data["filament"]["extra"].get("type", ""))
+                                                      filament_extra.get("type", ""))
     
   ams_message["print"]["tray_info_idx"] = filament_brand_code["brand_code"]
 

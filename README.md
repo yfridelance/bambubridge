@@ -1,6 +1,6 @@
-# <img alt="logo" src="static/logo.png" height="36" /> BambuBridge
+# <img alt="logo" src="static/logo.webp" height="36" /> BambuBridge
 
-> **Note:** This project was formerly known as "BambuBridge" and is being rebranded to "BambuBridge" to better reflect its purpose as a bridge between SpoolMan and Bambu Lab printers.
+> **Fork Notice:** This project is a fork of [OpenSpoolman](https://github.com/drndos/openspoolman) — rebranded to BambuBridge to better reflect its purpose as a bridge between SpoolMan and Bambu Lab printers.
 
 **Bambu Lab Filament Bridge** — Connect SpoolMan with Bambu Lab printers and AMS for automatic filament tracking.
 
@@ -8,21 +8,11 @@ BambuBridge automatically subtracts the estimated usage from the SpoolMan-manage
 
 No need for cloud or additional hardware—NFC Tags are optional and you can rely solely on the web GUI. In SpoolMan you can generate QR-code stickers that link straight back to BambuBridge so users can tap a label from their mobile device; change the base URL in SpoolMan settings to BambuBridge before generating the sticker (see [SpoolMan stickers](#spoolman-stickers)).
 
-Similar functionality to https://github.com/spuder/OpenSpool using only your phone, server, and NFC tags integrated with SpoolMan.
-
 Everything works locally without cloud access; you can use `scripts/init_bambulab.py` to fetch your `PRINTER_ID`/`PRINTER_CODE` if the printer does not expose them.
 
 Docker: https://ghcr.io/xento/bambubridge
 
 Helm: https://github.com/Xento/bambubridge/pkgs/container/bambubridge%2Fhelm%2Fbambubridge
-
-### News
-- [v0.3.0](https://github.com/Xento/bambubridge/releases/tag/v0.3.0) - 23.12.2025 — more accurate filament accounting and layer tracking, higher-fidelity print history, and better Bambu Lab / AMS integration
-- [v0.2.0](https://github.com/Xento/bambubridge/releases/tag/v0.2.0) - 07.12.2025 — Adds material-aware tray/spool mismatch detection, tray color cues, print reassign/pagination, spool material filters, and SpoolMan URL handling with refreshed responsive layouts.
-- [v0.1.9](https://github.com/Xento/bambubridge/releases/tag/v0.1.9) - 25.05.2025 — Ships post-print spool assignment, multi-platform Docker images, customizable spool sorting, timezone config, and compatibility/uI polish.
-- [v0.1.8](https://github.com/Xento/bambubridge/releases/tag/v0.1.8) - 20.04.2025 — Starts importing each filament’s SpoolMan `filament_id` for accurate matching (requires the `filament_id` custom field).
-- [v0.1.7](https://github.com/Xento/bambubridge/releases/tag/v0.1.7) - 17.04.2025 — Introduces print cost tracking, printer header info, SPA gating improvements, and fixes for drawer colors/local prints.
-- [0.1.6](https://github.com/Xento/bambubridge/releases/tag/0.1.6) - 09.04.2025 — Published container images (main service + Helm chart) and packaged artifacts for easier deployments.
 
 ### Main features
 

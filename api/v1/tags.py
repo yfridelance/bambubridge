@@ -162,17 +162,32 @@ def link_bambu_tag():
         extras = spool.get("extra", {}) or {}
         spoolman_client.patchExtraTags(spool_id, extras, {"tag": json.dumps(bambu_tag)})
 
-        # If AMS/tray info provided, also set as active tray
+        # Fetch updated spool with the new tag
+        spool = spoolman_client.getSpoolById(spool_id)
+
+        # Invalidate the spool cache so MQTT handlers see the new tag
+        spoolman_service.fetchSpools(cached=False)
+
+        # If AMS/tray info provided, also set as active tray in Spoolman
         if ams_id is not None and tray_id is not None:
             try:
-                mqtt_bambulab.setActiveTray(spool_id, spool.get("extra"), ams_id, tray_id)
-                from app import setActiveSpool
-                setActiveSpool(ams_id, tray_id, spool)
+                # Use the updated spool extras (with the new tag)
+                spoolman_service.setActiveTray(spool_id, spool.get("extra"), ams_id, tray_id)
+                # Refresh the spool to include the active_tray update
+                spool = spoolman_client.getSpoolById(spool_id)
+                # Ensure cache is up to date after setActiveTray
+                spoolman_service.fetchSpools(cached=False)
             except Exception:
                 pass  # Non-critical if tray assignment fails
 
-        # Fetch updated spool
-        spool = spoolman_client.getSpoolById(spool_id)
+        # Request immediate AMS update from printer so the new tag is recognized
+        try:
+            from messages import PUSH_ALL
+            client = mqtt_bambulab.getMqttClient()
+            if client and mqtt_bambulab.isMqttClientConnected():
+                mqtt_bambulab.publish(client, PUSH_ALL)
+        except Exception:
+            pass  # Non-critical if push fails
         return json_success({
             "spool": serialize_spool(spool),
             "bambu_tag": bambu_tag,

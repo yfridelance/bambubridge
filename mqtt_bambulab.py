@@ -475,20 +475,25 @@ def on_message(client, userdata, msg):
                 f"    - [{num2letter(ams['id'])}{tray['id']}] {tray['tray_sub_brands']} {tray['tray_color']} ({str(tray['remain']).zfill(3)}%) [[ {tray['tray_uuid']} ]]")
 
             found = False
-            tray_uuid = "00000000000000000000000000000000"
+            tray_uuid = tray["tray_uuid"]
 
-            for spool in fetchSpools(True):
-
-              tray_uuid = tray["tray_uuid"]
-
-              if not spool.get("extra", {}).get("tag"):
+            # Use cached=False to ensure we see newly linked tags
+            for spool in fetchSpools(False):
+              raw_tag = spool.get("extra", {}).get("tag")
+              if not raw_tag:
                 continue
-              tag = json.loads(spool["extra"]["tag"])
-              if tag != tray["tray_uuid"]:
+
+              # Parse the tag - handle both JSON-encoded and plain strings
+              try:
+                tag = json.loads(raw_tag) if isinstance(raw_tag, str) else raw_tag
+              except (json.JSONDecodeError, ValueError):
+                tag = raw_tag  # Use as-is if not valid JSON
+
+              if tag != tray_uuid:
                 continue
 
               found = True
-
+              log(f"      ✓ Matched spool {spool['id']} with tag {tag}")
               setActiveTray(spool['id'], spool["extra"], ams['id'], tray["id"])
 
               # TODO: filament remaining - Doesn't work for AMS Lite
@@ -499,7 +504,16 @@ def on_message(client, userdata, msg):
             if not found and tray_uuid == "00000000000000000000000000000000":
               log("      - non Bambulab Spool!")
             elif not found:
-              log("      - Not found. Update spool tag!")
+              log(f"      - Not found. Looking for tag: {tray_uuid}")
+              # Log all spools with tags for debugging
+              for spool in fetchSpools(False):
+                raw_tag = spool.get("extra", {}).get("tag")
+                if raw_tag:
+                  try:
+                    parsed = json.loads(raw_tag) if isinstance(raw_tag, str) else raw_tag
+                  except (json.JSONDecodeError, ValueError):
+                    parsed = raw_tag
+                  log(f"        Spool {spool['id']} has tag: {parsed} (raw: {raw_tag})")
               tray["unmapped_bambu_tag"] = tray_uuid
               tray["issue"] = True
               clear_active_spool_for_tray(ams['id'], tray['id'])
@@ -547,11 +561,22 @@ def async_subscribe():
           log("🔄 Trying to connect ...", flush=True)
           MQTT_CLIENT.connect(PRINTER_IP, 8883, MQTT_KEEPALIVE)
           MQTT_CLIENT.loop_start()
-          
+
+          # Warte bis Verbindung hergestellt oder Timeout (max 30 Sek)
+          for _ in range(30):
+              if MQTT_CLIENT_CONNECTED:
+                  break
+              time.sleep(1)
+          else:
+              # Timeout erreicht - loop stoppen und neu versuchen
+              MQTT_CLIENT.loop_stop()
+              log("⚠️ connection timed out, new try in 15 seconds...", flush=True)
+              time.sleep(15)
+              continue
+
       except Exception as exc:
           log(f"⚠️ connection failed: {exc}, new try in 15 seconds...", flush=True)
-
-      time.sleep(15)
+          time.sleep(15)
 
     time.sleep(15)
 

@@ -38,9 +38,14 @@ export const TrayCard: React.FC<TrayCardProps> = ({
   };
 
   const handleLinkBambu = () => {
-    navigate(
-      `/tags/link-bambu?tag=${tray.unmapped_bambu_tag}&ams=${amsId}&tray=${tray.index}`
-    );
+    const params = new URLSearchParams({
+      tag: tray.unmapped_bambu_tag || "",
+      ams: String(amsId),
+      tray: String(tray.index),
+    });
+    if (tray.material) params.set("material", tray.material);
+    if (tray.tray_color) params.set("color", tray.tray_color);
+    navigate(`/tags/link-bambu?${params.toString()}`);
   };
 
   const getStatusBadge = () => {
@@ -150,7 +155,7 @@ export const TrayCard: React.FC<TrayCardProps> = ({
           onClick={handleFill}
           block
           size="small"
-          disabled={!!tray.spool_id}
+          disabled={!!tray.spool_id || !!tray.unmapped_bambu_tag}
         >
           {t("home.assign")}
         </Button>

@@ -13,13 +13,16 @@
     "back": "Back",
     "confirm": "Confirm",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "all": "All",
+    "status": "Status"
   },
   "nav": {
     "home": "Home",
     "spools": "Spools",
     "prints": "Print History",
     "tags": "NFC Tags",
+    "issues": "Issues",
     "settings": "Settings"
   },
   "home": {
@@ -35,6 +38,11 @@
     "humidity": "Humidity",
     "temperature": "Temperature"
   },
+  "fill": {
+    "confirmTitle": "Assign Spool to Tray",
+    "confirmMessage": "Assign \"{{spool}}\" to AMS {{ams}}, Tray {{tray}}?",
+    "success": "\"{{spool}}\" has been assigned to the tray."
+  },
   "spool": {
     "title": "Spools",
     "name": "Name",
@@ -47,7 +55,9 @@
     "tag": "Tag ID",
     "noTag": "No tag assigned",
     "assignedTo": "Assigned to",
-    "notAssigned": "Not assigned"
+    "assigned": "Assigned",
+    "notAssigned": "Not assigned",
+    "notFound": "Spool not found"
   },
   "print": {
     "title": "Print History",
@@ -76,7 +86,33 @@
     "scanTag": "Scan NFC Tag",
     "writeToTag": "Write to Tag",
     "tagWritten": "Tag written successfully",
-    "tagLinked": "Tag linked successfully"
+    "tagWrittenDesc": "The NFC tag has been written and linked to the spool.",
+    "tagLinked": "Tag linked successfully",
+    "nfcNotSupported": "NFC not supported",
+    "nfcNotSupportedDesc": "Your browser or device does not support NFC writing. Please use Android Chrome.",
+    "instructions": "Instructions",
+    "instruction1": "Attach the NFC tag to the spool so you can reach it with the top of your phone.",
+    "instruction2": "Allow NFC usage if prompted by your browser.",
+    "instruction3": "Bring the tag close to your phone when prompted.",
+    "startWriting": "Start Writing NFC Tag",
+    "stepGenerate": "Generate",
+    "stepPrepare": "Prepare",
+    "stepWrite": "Write",
+    "stepDone": "Done",
+    "generatingTag": "Generating tag ID...",
+    "generateFailed": "Failed to generate tag ID",
+    "readyToWrite": "Ready to write",
+    "bringTagCloser": "Press the button below and bring the NFC tag close to your phone.",
+    "writingTag": "Writing to NFC tag...",
+    "assigningTag": "Linking tag to spool...",
+    "assignFailed": "Failed to link tag to spool",
+    "writeFailed": "Write failed",
+    "retry": "Try Again",
+    "selectSpool": "Select a spool to link",
+    "linkingTag": "Linking Bambu tag...",
+    "bambuTagId": "Bambu Tag ID",
+    "linkSuccess": "Bambu tag linked successfully",
+    "linkFailed": "Failed to link Bambu tag"
   },
   "settings": {
     "title": "Settings",
@@ -98,5 +134,18 @@
     "colorMismatch": "Color mismatch",
     "materialMismatch": "Material mismatch",
     "unmappedTag": "Unmapped Bambu tag"
+  },
+  "issue": {
+    "title": "Issues",
+    "noIssues": "No issues detected. All trays are properly configured.",
+    "unknownIssue": "Unknown issue",
+    "unmappedTagDesc": "An unknown Bambu Lab spool was detected. Link it to a spool in Spoolman.",
+    "materialMismatchDesc": "The AMS reports a different filament type than what is assigned in Spoolman.",
+    "colorMismatchDesc": "The color reported by the AMS does not match the assigned spool color.",
+    "amsReports": "AMS reports",
+    "assignedSpool": "Assigned spool",
+    "reassignSpool": "Reassign Spool",
+    "amsColor": "AMS Color",
+    "spoolColor": "Spool Color"
   }
 }
