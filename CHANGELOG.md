@@ -1,3 +1,9 @@
+## [1.0.0-dev.2](https://github.com/yfridelance/bambubridge/compare/v1.0.0-dev.1...v1.0.0-dev.2) (2026-05-09)
+
+### Bug Fixes
+
+* **ci:** use cycjimmy/semantic-release-action for proper outputs ([bc48e2e](https://github.com/yfridelance/bambubridge/commit/bc48e2ea8466461d4aaf030c09e8668fe49ccb99))
+
 ## 1.0.0-dev.1 (2026-05-09)
 
 ### Features
