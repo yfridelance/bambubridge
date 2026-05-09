@@ -13,13 +13,16 @@
     "back": "Zurück",
     "confirm": "Bestätigen",
     "yes": "Ja",
-    "no": "Nein"
+    "no": "Nein",
+    "all": "Alle",
+    "status": "Status"
   },
   "nav": {
     "home": "Übersicht",
     "spools": "Spulen",
     "prints": "Druckverlauf",
     "tags": "NFC-Tags",
+    "issues": "Probleme",
     "settings": "Einstellungen"
   },
   "home": {
@@ -35,6 +38,11 @@
     "humidity": "Feuchtigkeit",
     "temperature": "Temperatur"
   },
+  "fill": {
+    "confirmTitle": "Spule dem Fach zuweisen",
+    "confirmMessage": "\"{{spool}}\" zu AMS {{ams}}, Fach {{tray}} zuweisen?",
+    "success": "\"{{spool}}\" wurde dem Fach zugewiesen."
+  },
   "spool": {
     "title": "Spulen",
     "name": "Name",
@@ -47,7 +55,9 @@
     "tag": "Tag-ID",
     "noTag": "Kein Tag zugewiesen",
     "assignedTo": "Zugewiesen an",
-    "notAssigned": "Nicht zugewiesen"
+    "assigned": "Zugewiesen",
+    "notAssigned": "Nicht zugewiesen",
+    "notFound": "Spule nicht gefunden"
   },
   "print": {
     "title": "Druckverlauf",
@@ -76,7 +86,33 @@
     "scanTag": "NFC-Tag scannen",
     "writeToTag": "Auf Tag schreiben",
     "tagWritten": "Tag erfolgreich beschrieben",
-    "tagLinked": "Tag erfolgreich verknüpft"
+    "tagWrittenDesc": "Der NFC-Tag wurde beschrieben und mit der Spule verknüpft.",
+    "tagLinked": "Tag erfolgreich verknüpft",
+    "nfcNotSupported": "NFC nicht unterstützt",
+    "nfcNotSupportedDesc": "Dein Browser oder Gerät unterstützt kein NFC. Bitte Android Chrome verwenden.",
+    "instructions": "Anleitung",
+    "instruction1": "Befestige den NFC-Tag an der Spule, sodass du ihn mit der Rückseite deines Handys erreichen kannst.",
+    "instruction2": "Erlaube NFC-Zugriff, wenn dein Browser danach fragt.",
+    "instruction3": "Halte den Tag nah an dein Handy, wenn du dazu aufgefordert wirst.",
+    "startWriting": "NFC-Tag beschreiben",
+    "stepGenerate": "Generieren",
+    "stepPrepare": "Vorbereiten",
+    "stepWrite": "Schreiben",
+    "stepDone": "Fertig",
+    "generatingTag": "Tag-ID wird generiert...",
+    "generateFailed": "Tag-ID konnte nicht generiert werden",
+    "readyToWrite": "Bereit zum Schreiben",
+    "bringTagCloser": "Drücke den Button und halte den NFC-Tag nah an dein Handy.",
+    "writingTag": "Schreibe auf NFC-Tag...",
+    "assigningTag": "Verknüpfe Tag mit Spule...",
+    "assignFailed": "Tag konnte nicht mit Spule verknüpft werden",
+    "writeFailed": "Schreiben fehlgeschlagen",
+    "retry": "Erneut versuchen",
+    "selectSpool": "Spule zum Verknüpfen auswählen",
+    "linkingTag": "Verknüpfe Bambu-Tag...",
+    "bambuTagId": "Bambu-Tag-ID",
+    "linkSuccess": "Bambu-Tag erfolgreich verknüpft",
+    "linkFailed": "Bambu-Tag konnte nicht verknüpft werden"
   },
   "settings": {
     "title": "Einstellungen",
@@ -98,5 +134,18 @@
     "colorMismatch": "Farbabweichung",
     "materialMismatch": "Materialabweichung",
     "unmappedTag": "Nicht zugeordneter Bambu-Tag"
+  },
+  "issue": {
+    "title": "Probleme",
+    "noIssues": "Keine Probleme erkannt. Alle Fächer sind korrekt konfiguriert.",
+    "unknownIssue": "Unbekanntes Problem",
+    "unmappedTagDesc": "Eine unbekannte Bambu Lab Spule wurde erkannt. Verknüpfe sie mit einer Spule in Spoolman.",
+    "materialMismatchDesc": "Das AMS meldet einen anderen Filament-Typ als in Spoolman zugewiesen.",
+    "colorMismatchDesc": "Die vom AMS gemeldete Farbe stimmt nicht mit der zugewiesenen Spulenfarbe überein.",
+    "amsReports": "AMS meldet",
+    "assignedSpool": "Zugewiesene Spule",
+    "reassignSpool": "Spule neu zuweisen",
+    "amsColor": "AMS-Farbe",
+    "spoolColor": "Spulen-Farbe"
   }
 }

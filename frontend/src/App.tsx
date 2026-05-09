@@ -12,6 +12,7 @@ import {
   HistoryOutlined,
   TagOutlined,
   SettingOutlined,
+  WarningOutlined,
 } from "@ant-design/icons";
 import { useTranslation } from "react-i18next";
 
@@ -25,6 +26,7 @@ import { HomePage } from "./pages/home";
 import { SpoolsListPage, SpoolShowPage } from "./pages/spools";
 import { PrintsListPage, PrintShowPage } from "./pages/prints";
 import { TagsPage, WriteTagPage, LinkBambuPage } from "./pages/tags";
+import { IssuesPage } from "./pages/issues";
 import { SettingsPage } from "./pages/settings";
 
 import "@refinedev/antd/dist/reset.css";
@@ -89,6 +91,14 @@ function AppContent() {
                 },
               },
               {
+                name: "issues",
+                list: "/issues",
+                meta: {
+                  label: t("nav.issues"),
+                  icon: <WarningOutlined />,
+                },
+              },
+              {
                 name: "settings",
                 list: "/settings",
                 meta: {
@@ -139,6 +149,7 @@ function AppContent() {
                   <Route path="write/:spoolId" element={<WriteTagPage />} />
                   <Route path="link-bambu" element={<LinkBambuPage />} />
                 </Route>
+                <Route path="/issues" element={<IssuesPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>
             </Routes>
