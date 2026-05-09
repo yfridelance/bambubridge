@@ -9,7 +9,8 @@ from flask import Blueprint, request
 import mqtt_bambulab
 import spoolman_client
 import spoolman_service
-from config import EXTERNAL_SPOOL_AMS_ID
+from config import EXTERNAL_SPOOL_AMS_ID, EXTERNAL_SPOOL_ID
+import spoolman_service as spool_svc
 from .common import (
     json_success,
     json_error,
@@ -200,3 +201,25 @@ def unassign_tray(printer_id: str, tray_index: int):
     except Exception as exc:
         traceback.print_exc()
         return json_error("UNASSIGN_FAILED", f"Failed to unassign tray: {exc}", 500)
+
+
+@ams_bp.route("/printers/<printer_id>/external-spool/reset", methods=["POST"])
+def reset_external_spool(printer_id: str):
+    """Reset/unassign the external spool."""
+    if not printer_matches(printer_id):
+        return json_error("PRINTER_NOT_FOUND", f"Printer '{printer_id}' not found", 404)
+
+    if READ_ONLY_MODE:
+        return json_error("READ_ONLY_MODE", "Live read-only mode: resetting external spool is disabled.", 403)
+
+    try:
+        # Clear the active spool assignment for external tray
+        spool_svc.clear_active_spool_for_tray(EXTERNAL_SPOOL_ID, 0)
+
+        return json_success({
+            "printer_id": ACTIVE_PRINTER_ID,
+            "external_spool_reset": True,
+        })
+    except Exception as exc:
+        traceback.print_exc()
+        return json_error("RESET_FAILED", f"Failed to reset external spool: {exc}", 500)

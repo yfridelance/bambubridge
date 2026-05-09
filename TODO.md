@@ -40,12 +40,11 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - **Status:** ✅ Implementiert im React-Frontend
 
 ### External Spool Reset Handler
-- **Datei:** `app.py:299, 452`
 - **Beschreibung:** Korrektes Handling wenn externe Spool-Info via Bambu Lab Interface zurückgesetzt wird
-- **Status:** Nicht implementiert
+- **Status:** API-Endpoint erforderlich
 
 ### sub_brand_code Aktivierung
-- **Datei:** `app.py:432`
+- **Datei:** `app.py:87-88`
 - **Beschreibung:** `sub_brand_code` testen und aktivieren
 - **Status:** Testing erforderlich
 
@@ -63,7 +62,7 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - [x] Issue-Diagnostik
 
 ### Nach Feature-Parität
-- [ ] Jinja2-Templates entfernen
+- [x] Jinja2-Templates entfernen
 - [ ] SSE für Realtime-Updates optimieren
 - [ ] Mobile PWA verbessern
 
@@ -81,21 +80,20 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 - [x] `frontend/src/App.tsx` - Title/Branding
 - [x] `frontend/index.html` - Title/PWA
 - [x] `frontend/vite.config.ts` - PWA Manifest
-- [x] `templates/base.html` - Legacy-UI GitHub Link
 - [x] `.github/workflows/*.yml`
 - [x] `docs/api.md`
 - [x] `api/v1/__init__.py`
 
 ### Assets aktualisieren
 - [x] Logo erstellen/aktualisieren
-- [ ] Favicon
+- [x] Favicon
 - [ ] Screenshots in Dokumentation
 
 ---
 
 ## Technische Schulden
 
-- [ ] Docker-Container-Größe reduzieren
+- [x] Docker-Container-Größe reduzieren (multi-stage build)
 - [ ] QR-Code-Unterstützung für Spool-Labels
 - [ ] Spool-Suche/Filter in Liste verbessern
 - [ ] API-Dokumentation (OpenAPI/Swagger)
@@ -124,6 +122,10 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
   - WriteTagPage mit Web NFC API
   - LinkBambuPage für Bambu-Tag-Verknüpfung
   - Issues-Seite mit Diagnose und Lösungsoptionen
+- [x] Jinja2-Templates Cleanup (2026-05-09)
+  - Legacy Routes entfernt
+  - templates/ Verzeichnis gelöscht
+  - Nur noch React SPA Frontend
 
 ---
 
@@ -132,7 +134,7 @@ Dieses Dokument trackt offene Aufgaben und geplante Features.
 ### Architektur-Entscheidungen
 - SpoolMan bleibt die Datenquelle für Spool-Daten
 - BambuBridge ist eine Integrationsschicht, kein Fork
-- Dual-Frontend während Migration: Jinja2 (Legacy) + React (Neu)
+- Frontend: React SPA mit Vite/PWA
 
 ### Abwärtskompatibilität
 - OPENSPOOLMAN_* Environment-Variablen bleiben als Aliasse erhalten

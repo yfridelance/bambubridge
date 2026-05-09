@@ -346,8 +346,6 @@ def processMessage(data):
 
             PENDING_PRINT_METADATA["tracking_started"] = True
 
-        #TODO 
-    
       # When stage changed to "change filament" and PENDING_PRINT_METADATA is set
       if (PENDING_PRINT_METADATA and 
           (
@@ -460,9 +458,20 @@ def on_message(client, userdata, msg):
         processMessage(data)
         FILAMENT_TRACKER.on_message(data)
       
-    # Save external spool tray data
+    # Save external spool tray data and detect resets
     if "print" in data and "vt_tray" in data["print"]:
-      LAST_AMS_CONFIG["vt_tray"] = data["print"]["vt_tray"]
+      new_vt_tray = data["print"]["vt_tray"]
+      old_vt_tray = LAST_AMS_CONFIG.get("vt_tray", {})
+
+      # Detect external spool reset: tag_uid was set but is now empty
+      old_tag = old_vt_tray.get("tag_uid", "")
+      new_tag = new_vt_tray.get("tag_uid", "")
+
+      if old_tag and not new_tag:
+        log(f"External spool reset detected (tag_uid cleared)")
+        clear_active_spool_for_tray(EXTERNAL_SPOOL_ID, 0)
+
+      LAST_AMS_CONFIG["vt_tray"] = new_vt_tray
 
     # Save ams spool data
     if "print" in data and "ams" in data["print"] and "ams" in data["print"]["ams"]:
