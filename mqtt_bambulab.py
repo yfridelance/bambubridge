@@ -346,8 +346,6 @@ def processMessage(data):
 
             PENDING_PRINT_METADATA["tracking_started"] = True
 
-        #TODO 
-    
       # When stage changed to "change filament" and PENDING_PRINT_METADATA is set
       if (PENDING_PRINT_METADATA and 
           (
