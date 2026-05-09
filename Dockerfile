@@ -33,7 +33,6 @@ USER nonroot
 COPY --chown=nonroot:nonroot *.py ./
 COPY --chown=nonroot:nonroot requirements.txt ./
 COPY --chown=nonroot:nonroot api/ ./api/
-COPY --chown=nonroot:nonroot templates/ ./templates/
 COPY --chown=nonroot:nonroot static/ ./static/
 COPY --chown=nonroot:nonroot scripts/ ./scripts/
 
