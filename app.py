@@ -5,7 +5,8 @@ import traceback
 import uuid
 from collections import Counter
 
-from flask import Flask, request, render_template, redirect, url_for
+from flask import Flask, request, render_template, redirect, url_for, send_from_directory
+from pathlib import Path
 from flask_cors import CORS
 
 from config import (
@@ -47,6 +48,9 @@ if not USE_TEST_DATA:
   mqtt_bambulab.init_mqtt()
 
 app = Flask(__name__)
+
+# React frontend directory
+FRONTEND_DIR = Path(__file__).resolve().parent / "frontend" / "dist"
 
 @app.context_processor
 def fronted_utilities():
@@ -440,31 +444,42 @@ def setActiveSpool(ams_id, tray_id, spool_data):
 
 @app.route("/")
 def home():
-  if not mqtt_bambulab.isMqttClientConnected():
-    return render_template('error.html', exception="MQTT is disconnected. Is the printer online?")
+  return send_from_directory(FRONTEND_DIR, "index.html")
 
-  try:
-    last_ams_config = mqtt_bambulab.getLastAMSConfig()
-    ams_data = last_ams_config.get("ams", [])
-    vt_tray_data = last_ams_config.get("vt_tray", {})
-    spool_list = mqtt_bambulab.fetchSpools()
-    success_message = request.args.get("success_message")
-    
-    issue = False
-    #TODO: Fix issue when external spool info is reset via bambulab interface
-    _augment_tray(spool_list, vt_tray_data, EXTERNAL_SPOOL_AMS_ID, EXTERNAL_SPOOL_ID)
-    issue |= vt_tray_data["issue"]
 
-    for ams in ams_data:
-      for tray in ams["tray"]:
-        _augment_tray(spool_list, tray, ams["id"], tray["id"])
-        issue |= tray["issue"]
+@app.route("/assets/<path:filename>")
+def frontend_assets(filename):
+  return send_from_directory(FRONTEND_DIR / "assets", filename)
 
-    ams_labels = build_ams_labels(ams_data)
-    return render_template('index.html', success_message=success_message, ams_data=ams_data, vt_tray_data=vt_tray_data, issue=issue, ams_labels=ams_labels)
-  except Exception as e:
-    traceback.print_exc()
-    return render_template('error.html', exception=str(e))
+
+@app.route("/logo.webp")
+def serve_logo():
+  return send_from_directory(FRONTEND_DIR, "logo.webp")
+
+
+@app.route("/logo_dark.webp")
+def serve_logo_dark():
+  return send_from_directory(FRONTEND_DIR, "logo_dark.webp")
+
+
+@app.route("/favicon.ico")
+def serve_favicon():
+  return send_from_directory(FRONTEND_DIR, "favicon.ico")
+
+
+@app.route("/manifest.webmanifest")
+def serve_manifest():
+  return send_from_directory(FRONTEND_DIR, "manifest.webmanifest")
+
+
+@app.route("/registerSW.js")
+def serve_register_sw():
+  return send_from_directory(FRONTEND_DIR, "registerSW.js")
+
+
+@app.route("/sw.js")
+def serve_sw():
+  return send_from_directory(FRONTEND_DIR, "sw.js")
 
 def sort_spools(spools):
   def condition(item):
@@ -734,6 +749,18 @@ CORS(app, resources={r"/api/*": {"origins": "*"}})
 # Start SSE state monitor for real-time updates
 from api.v1.realtime import start_state_monitor
 start_state_monitor(interval=2.0)
+
+
+# Serve React frontend static files and SPA catch-all
+@app.route("/<path:path>")
+def serve_frontend(path):
+  # Try to serve the file from frontend/dist
+  file_path = FRONTEND_DIR / path
+  if file_path.is_file():
+    return send_from_directory(FRONTEND_DIR, path)
+  # For SPA routing, return index.html for non-file paths
+  return send_from_directory(FRONTEND_DIR, "index.html")
+
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=8000, debug=True, threaded=True)

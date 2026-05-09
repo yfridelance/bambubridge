@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.egg-info/
+.pytest_cache/
+
+# Node
+node_modules/
+frontend/node_modules/
+frontend/dist/
+
+# IDE
+.vscode/
+.idea/
+
+# Git
+.git/
+.gitignore
+
+# Local config and data
+config.env
+*.db
+data/
+logs/
+prints/
+
+# Documentation and tests
+docs/
+tests/
+e2e/
+*.md
+agents.md
+
+# macOS
+.DS_Store
+
+# Misc
+*.log
