@@ -44,17 +44,6 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install semantic-release dependencies
-        run: |
-          npm install -g semantic-release \
-            @semantic-release/commit-analyzer \
-            @semantic-release/release-notes-generator \
-            @semantic-release/changelog \
-            @semantic-release/exec \
-            @semantic-release/git \
-            @semantic-release/github \
-            conventional-changelog-conventionalcommits
-
       - name: Make update script executable
         run: chmod +x scripts/update-versions.sh
 
@@ -64,9 +53,18 @@ jobs:
 
       - name: Run semantic-release
         id: semantic
+        uses: cycjimmy/semantic-release-action@v4
+        with:
+          extra_plugins: |
+            @semantic-release/commit-analyzer
+            @semantic-release/release-notes-generator
+            @semantic-release/changelog
+            @semantic-release/exec
+            @semantic-release/git
+            @semantic-release/github
+            conventional-changelog-conventionalcommits
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
 
   build-docker:
     name: Build and Push Docker Image
