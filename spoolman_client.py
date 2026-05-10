@@ -4,6 +4,7 @@ import json
 from logger import append_to_rotating_file, log
 
 SPOOLMAN_LOG_FILE = "/home/app/logs/spoolman.log"
+DEFAULT_TIMEOUT = 10  # seconds
 
 
 def _log_spoolman_change(action, spool_id=None, payload=None, status=None):
@@ -33,7 +34,7 @@ def patchExtraTags(spool_id, old_extras, new_extras):
 
   resp = requests.patch(f"{SPOOLMAN_API_V1}/spool/{spool_id}", json={
     "extra": old_extras
-  })
+  }, timeout=DEFAULT_TIMEOUT)
   _log_spoolman_change(
     "patch_extra_tags",
     spool_id=spool_id,
@@ -45,7 +46,7 @@ def patchExtraTags(spool_id, old_extras, new_extras):
 
 
 def getSpoolById(spool_id):
-  response = requests.get(f"{SPOOLMAN_API_V1}/spool/{spool_id}")
+  response = requests.get(f"{SPOOLMAN_API_V1}/spool/{spool_id}", timeout=DEFAULT_TIMEOUT)
   #print(response.status_code)
   #print(response.text)
   return response.json()
@@ -53,10 +54,10 @@ def getSpoolById(spool_id):
 
 def fetchSpoolList():
   if SPOOL_SORTING:
-    response = requests.get(f"{SPOOLMAN_API_V1}/spool?sort={SPOOL_SORTING}")
+    response = requests.get(f"{SPOOLMAN_API_V1}/spool?sort={SPOOL_SORTING}", timeout=DEFAULT_TIMEOUT)
   else:
-    response = requests.get(f"{SPOOLMAN_API_V1}/spool")
-    
+    response = requests.get(f"{SPOOLMAN_API_V1}/spool", timeout=DEFAULT_TIMEOUT)
+
   #print(response.status_code)
   #print(response.text)
   return response.json()
@@ -73,7 +74,7 @@ def consumeSpool(spool_id, use_weight=None, use_length=None):
 
   log(f'Consuming {payload} from spool {spool_id}')
 
-  response = requests.put(f"{SPOOLMAN_API_V1}/spool/{spool_id}/use", json=payload)
+  response = requests.put(f"{SPOOLMAN_API_V1}/spool/{spool_id}/use", json=payload, timeout=DEFAULT_TIMEOUT)
   _log_spoolman_change(
     "consume_spool",
     spool_id=spool_id,
@@ -84,7 +85,7 @@ def consumeSpool(spool_id, use_weight=None, use_length=None):
   #print(response.text)
 
 def fetchSettings():
-  response = requests.get(f"{SPOOLMAN_API_V1}/setting/")
+  response = requests.get(f"{SPOOLMAN_API_V1}/setting/", timeout=DEFAULT_TIMEOUT)
   #print(response.status_code)
   #print(response.text)
 
