@@ -2,25 +2,40 @@ import type { DataProvider } from "@refinedev/core";
 import type { ApiResponse } from "../types";
 
 const API_URL = import.meta.env.VITE_API_URL || "";
+const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds
 
 async function fetchApi<T>(
   url: string,
-  options?: RequestInit
+  options?: RequestInit,
+  timeoutMs: number = DEFAULT_TIMEOUT_MS
 ): Promise<ApiResponse<T>> {
-  const response = await fetch(`${API_URL}${url}`, {
-    ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
-  });
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error?.error?.message || `HTTP ${response.status}`);
+  try {
+    const response = await fetch(`${API_URL}${url}`, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        ...options?.headers,
+      },
+      signal: controller.signal,
+    });
+
+    if (!response.ok) {
+      const error = await response.json().catch(() => ({}));
+      throw new Error(error?.error?.message || `HTTP ${response.status}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    if (error instanceof Error && error.name === "AbortError") {
+      throw new Error(`Request timeout after ${timeoutMs}ms`);
+    }
+    throw error;
+  } finally {
+    clearTimeout(timeoutId);
   }
-
-  return response.json();
 }
 
 export const dataProvider: DataProvider = {
