@@ -41,10 +41,20 @@ export default defineConfig({
         globPatterns: ["**/*.{js,css,html,ico,png,svg,woff2}"],
         runtimeCaching: [
           {
+            // SSE stream: must bypass the service worker entirely. NetworkFirst
+            // (or any caching strategy) on a never-ending text/event-stream
+            // response keeps SW fetch handlers pending forever, eats the 6
+            // per-origin HTTP/1.1 connection slots after a few route switches,
+            // and makes every subsequent /api/v1/* request hang.
+            urlPattern: /\/api\/v1\/events(\/|$)/,
+            handler: "NetworkOnly",
+          },
+          {
             urlPattern: /^https?:\/\/.*\/api\/v1\/.*/i,
             handler: "NetworkFirst",
             options: {
               cacheName: "api-cache",
+              networkTimeoutSeconds: 10,
               expiration: {
                 maxEntries: 100,
                 maxAgeSeconds: 60 * 5, // 5 minutes
