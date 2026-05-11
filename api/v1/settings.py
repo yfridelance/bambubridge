@@ -46,15 +46,26 @@ def get_settings():
 def get_spoolman_settings():
     """Get settings from Spoolman."""
     try:
-        settings = spoolman_client.fetchSettings() or {}
+        settings = spoolman_client.fetchSettings()
+
+        # Extract relevant settings
+        currency = None
+        extra_fields = {}
+
+        if settings:
+            for setting in settings:
+                key = setting.get("key")
+                value = setting.get("value")
+
+                if key == "currency":
+                    currency = value
+                elif key and key.startswith("extra_field_"):
+                    extra_fields[key] = value
 
         return json_success({
-            "currency": settings.get("currency"),
-            "base_url": settings.get("base_url"),
-            "extra_fields": {
-                "spool": settings.get("extra_fields_spool"),
-                "filament": settings.get("extra_fields_filament"),
-            },
+            "currency": currency,
+            "extra_fields": extra_fields,
+            "raw_settings": settings,
         })
     except Exception as exc:
         traceback.print_exc()
