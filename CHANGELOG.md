@@ -1,3 +1,9 @@
+## [1.0.1](https://github.com/yfridelance/bambubridge/compare/v1.0.0...v1.0.1) (2026-05-11)
+
+### Bug Fixes
+
+* stop SSE thread exhaustion and MQTT state oscillation ([e8b103a](https://github.com/yfridelance/bambubridge/commit/e8b103a8cb80dcd1eff607a863d7b2269bb4f5d1)), closes [#13](https://github.com/yfridelance/bambubridge/issues/13)
+
 ## 1.0.0 (2026-05-10)
 
 ### Features
