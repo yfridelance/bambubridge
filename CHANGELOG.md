@@ -1,3 +1,9 @@
+## [1.0.2](https://github.com/yfridelance/bambubridge/compare/v1.0.1...v1.0.2) (2026-05-11)
+
+### Bug Fixes
+
+* correct /api/v1/settings/spoolman response shape ([1f30484](https://github.com/yfridelance/bambubridge/commit/1f3048474aaa0fe779a6bf831aa8d8e2eb22d732))
+
 ## [1.0.2-dev.1](https://github.com/yfridelance/bambubridge/compare/v1.0.1...v1.0.2-dev.1) (2026-05-11)
 
 ### Bug Fixes
