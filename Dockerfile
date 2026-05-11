@@ -50,4 +50,8 @@ RUN pip install --no-cache-dir -r requirements.txt
 # define the port number the container should expose
 EXPOSE 8000
 
-CMD ["gunicorn", "-w", "2", "--threads", "4", "--timeout", "60", "--graceful-timeout", "30", "-b", "0.0.0.0:8000", "app:app"]
+# Single worker is required: mqtt_bambulab keeps PRINTER_STATE as per-process
+# globals, and the Bambu printer only allows one MQTT session per printer ID.
+# Multiple workers would each open their own MQTT client and serve inconsistent
+# state depending on which worker handles the request.
+CMD ["gunicorn", "-w", "1", "-k", "gthread", "--threads", "32", "--timeout", "60", "--graceful-timeout", "30", "-b", "0.0.0.0:8000", "app:app"]
