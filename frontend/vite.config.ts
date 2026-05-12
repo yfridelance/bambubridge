@@ -87,28 +87,12 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
-    chunkSizeWarningLimit: 1100,
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ["react", "react-dom", "react-router", "react-router-dom"],
-          antd: ["antd"],
-          "antd-icons": ["@ant-design/icons"],
-          refine: [
-            "@refinedev/core",
-            "@refinedev/antd",
-            "@refinedev/react-router",
-            "@refinedev/simple-rest",
-          ],
-          i18n: [
-            "i18next",
-            "react-i18next",
-            "i18next-browser-languagedetector",
-            "i18next-http-backend",
-          ],
-        },
-      },
-    },
+    // manualChunks was tried in PR #20 to split vendor bundles, but it caused
+    // a production white screen: React's CJS module init wrote to an
+    // undefined `exports` because of cross-chunk interop ordering combined
+    // with PWA service-worker version skew. Leave Vite's default chunking in
+    // place — the 1.6 MB bundle warning is acceptable for now.
+    chunkSizeWarningLimit: 1700,
   },
   test: {
     globals: true,
