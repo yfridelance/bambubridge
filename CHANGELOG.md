@@ -1,3 +1,17 @@
+## [1.2.0-dev.3](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2026-05-12)
+
+### Features
+
+* **home:** inline assign dialog for non-Bambu and empty trays ([40068dd](https://github.com/yfridelance/bambubridge/commit/40068dd9d18edb4c8b877a7f8b64d54c2bacc08e))
+
+### Bug Fixes
+
+* **fill-tray:** label external spool slot instead of showing AMS 256 ([9ff99db](https://github.com/yfridelance/bambubridge/commit/9ff99dbc9e1ab434483b4964a7ac57ae67c4a1ee))
+
+### Refactoring
+
+* **home:** replace FillTrayModal with a full FillTrayPage ([528d3ed](https://github.com/yfridelance/bambubridge/commit/528d3edb999129f520bf1bb7b92acca862d5728e))
+
 ## [1.2.0-dev.2](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-05-12)
 
 ### Bug Fixes
