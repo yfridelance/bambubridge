@@ -1,3 +1,27 @@
+## [1.1.0-dev.3](https://github.com/yfridelance/bambubridge/compare/v1.1.0-dev.2...v1.1.0-dev.3) (2026-05-12)
+
+## [1.1.0-dev.2](https://github.com/yfridelance/bambubridge/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-05-12)
+
+### Features
+
+* **prints:** implement print detail page ([3ed1009](https://github.com/yfridelance/bambubridge/commit/3ed100955901c24632707a78b236a9d8f1033a99))
+
+## [1.1.0-dev.1](https://github.com/yfridelance/bambubridge/compare/v1.0.2-dev.1...v1.1.0-dev.1) (2026-05-12)
+
+### Features
+
+* **spools:** implement spool detail page ([886067e](https://github.com/yfridelance/bambubridge/commit/886067eca939dd374b89395c15b5fb14e11d2637))
+
+### Bug Fixes
+
+* **i18n:** add missing common.view key ([7857fab](https://github.com/yfridelance/bambubridge/commit/7857fabec134d3de3d130b61bf4ec1ca55c59af1))
+* **mqtt:** disconnect cleanly on SIGTERM/SIGINT ([424f12a](https://github.com/yfridelance/bambubridge/commit/424f12acbc925775a7fd532708aa70782f90fdfb))
+* **spoolman:** retry transient HTTP failures with backoff ([79bde1c](https://github.com/yfridelance/bambubridge/commit/79bde1cf79b4e7866dd4b89ab71badce5e4512d0))
+
+### Refactoring
+
+* **db:** introduce schema migration framework ([abfd592](https://github.com/yfridelance/bambubridge/commit/abfd592bfa5643673015716063d00b23ad44386f))
+
 ## [1.0.2](https://github.com/yfridelance/bambubridge/compare/v1.0.1...v1.0.2) (2026-05-11)
 
 ### Bug Fixes

@@ -15,7 +15,8 @@
     "yes": "Yes",
     "no": "No",
     "all": "All",
-    "status": "Status"
+    "status": "Status",
+    "view": "View"
   },
   "nav": {
     "home": "Home",
@@ -57,7 +58,16 @@
     "assignedTo": "Assigned to",
     "assigned": "Assigned",
     "notAssigned": "Not assigned",
-    "notFound": "Spool not found"
+    "notFound": "Spool not found",
+    "detail": {
+      "weight": "Weight (g)",
+      "diameter": "Diameter (mm)",
+      "remainingLength": "Remaining length (mm)",
+      "registered": "Registered",
+      "extra": "Extra fields",
+      "amsSlot": "AMS slot",
+      "back": "Back to list"
+    }
   },
   "print": {
     "title": "Print History",
@@ -74,7 +84,19 @@
     "running": "Printing",
     "completed": "Finished",
     "aborted": "Cancelled",
-    "failed": "Failed"
+    "failed": "Failed",
+    "notFound": "Print not found",
+    "detail": {
+      "back": "Back to list",
+      "amsSlot": "AMS slot",
+      "gramsUsed": "Used (g)",
+      "gramsBilled": "Billed (g)",
+      "estimated": "estimated",
+      "predictedEnd": "Predicted end",
+      "actualEnd": "Actual end",
+      "spool": "Spool",
+      "total": "Total"
+    }
   },
   "tag": {
     "title": "NFC Tags",

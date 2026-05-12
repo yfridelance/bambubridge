@@ -1,3 +1,5 @@
+import signal
+import sys
 from flask import Flask, send_from_directory
 from pathlib import Path
 from flask_cors import CORS
@@ -147,8 +149,30 @@ register_api_blueprints(app)
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Start SSE state monitor for real-time updates
-from api.v1.realtime import start_state_monitor
+from api.v1.realtime import start_state_monitor, stop_state_monitor
 start_state_monitor(interval=2.0)
+
+
+def _graceful_shutdown(signum, _frame):
+  log(f"🛑 received signal {signum}, shutting down gracefully")
+  try:
+    stop_state_monitor()
+  except Exception as exc:
+    log(f"⚠️ stop_state_monitor failed: {exc}")
+  try:
+    mqtt_bambulab.cleanup()
+  except Exception as exc:
+    log(f"⚠️ mqtt cleanup failed: {exc}")
+  sys.exit(0)
+
+
+for _sig in (signal.SIGTERM, signal.SIGINT):
+  try:
+    signal.signal(_sig, _graceful_shutdown)
+  except ValueError:
+    # signal.signal only works in the main thread; under Gunicorn workers
+    # the master forwards SIGTERM, so this path is exercised on shutdown.
+    pass
 
 
 # Serve React frontend static files and SPA catch-all

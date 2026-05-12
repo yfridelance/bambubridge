@@ -613,3 +613,19 @@ def isMqttClientConnected():
   global MQTT_CLIENT_CONNECTED
 
   return MQTT_CLIENT_CONNECTED
+
+
+def cleanup():
+  """Cleanly disconnect the MQTT client. Safe to call multiple times."""
+  global MQTT_CLIENT
+  if MQTT_CLIENT is None:
+    return
+  try:
+    MQTT_CLIENT.loop_stop()
+  except Exception as exc:
+    log(f"⚠️ mqtt loop_stop failed: {exc}")
+  try:
+    MQTT_CLIENT.disconnect()
+    log("👋 mqtt disconnected cleanly")
+  except Exception as exc:
+    log(f"⚠️ mqtt disconnect failed: {exc}")

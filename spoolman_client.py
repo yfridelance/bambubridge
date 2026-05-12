@@ -1,10 +1,34 @@
-import requests
-from config import SPOOLMAN_API_V1, SPOOL_SORTING
 import json
+
+import requests
+from requests.adapters import HTTPAdapter
+from urllib3.util.retry import Retry
+
+from config import SPOOLMAN_API_V1, SPOOL_SORTING
 from logger import append_to_rotating_file, log
 
 SPOOLMAN_LOG_FILE = "/home/app/logs/spoolman.log"
 DEFAULT_TIMEOUT = 10  # seconds
+
+
+def _build_session():
+  # Retry only idempotent verbs. POST is intentionally absent to avoid
+  # double-booking filament consumption on transient failures.
+  retry = Retry(
+    total=3,
+    backoff_factor=0.3,
+    status_forcelist=(500, 502, 503, 504, 429),
+    allowed_methods=frozenset(["GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]),
+    raise_on_status=False,
+  )
+  adapter = HTTPAdapter(max_retries=retry)
+  session = requests.Session()
+  session.mount("http://", adapter)
+  session.mount("https://", adapter)
+  return session
+
+
+_session = _build_session()
 
 
 def _log_spoolman_change(action, spool_id=None, payload=None, status=None):
@@ -32,7 +56,7 @@ def patchExtraTags(spool_id, old_extras, new_extras):
   for key, value in new_extras.items():
     old_extras[key] = value
 
-  resp = requests.patch(f"{SPOOLMAN_API_V1}/spool/{spool_id}", json={
+  resp = _session.patch(f"{SPOOLMAN_API_V1}/spool/{spool_id}", json={
     "extra": old_extras
   }, timeout=DEFAULT_TIMEOUT)
   _log_spoolman_change(
@@ -46,7 +70,7 @@ def patchExtraTags(spool_id, old_extras, new_extras):
 
 
 def getSpoolById(spool_id):
-  response = requests.get(f"{SPOOLMAN_API_V1}/spool/{spool_id}", timeout=DEFAULT_TIMEOUT)
+  response = _session.get(f"{SPOOLMAN_API_V1}/spool/{spool_id}", timeout=DEFAULT_TIMEOUT)
   #print(response.status_code)
   #print(response.text)
   return response.json()
@@ -54,9 +78,9 @@ def getSpoolById(spool_id):
 
 def fetchSpoolList():
   if SPOOL_SORTING:
-    response = requests.get(f"{SPOOLMAN_API_V1}/spool?sort={SPOOL_SORTING}", timeout=DEFAULT_TIMEOUT)
+    response = _session.get(f"{SPOOLMAN_API_V1}/spool?sort={SPOOL_SORTING}", timeout=DEFAULT_TIMEOUT)
   else:
-    response = requests.get(f"{SPOOLMAN_API_V1}/spool", timeout=DEFAULT_TIMEOUT)
+    response = _session.get(f"{SPOOLMAN_API_V1}/spool", timeout=DEFAULT_TIMEOUT)
 
   #print(response.status_code)
   #print(response.text)
@@ -74,7 +98,7 @@ def consumeSpool(spool_id, use_weight=None, use_length=None):
 
   log(f'Consuming {payload} from spool {spool_id}')
 
-  response = requests.put(f"{SPOOLMAN_API_V1}/spool/{spool_id}/use", json=payload, timeout=DEFAULT_TIMEOUT)
+  response = _session.put(f"{SPOOLMAN_API_V1}/spool/{spool_id}/use", json=payload, timeout=DEFAULT_TIMEOUT)
   _log_spoolman_change(
     "consume_spool",
     spool_id=spool_id,
@@ -85,7 +109,7 @@ def consumeSpool(spool_id, use_weight=None, use_length=None):
   #print(response.text)
 
 def fetchSettings():
-  response = requests.get(f"{SPOOLMAN_API_V1}/setting/", timeout=DEFAULT_TIMEOUT)
+  response = _session.get(f"{SPOOLMAN_API_V1}/setting/", timeout=DEFAULT_TIMEOUT)
   #print(response.status_code)
   #print(response.text)
 
