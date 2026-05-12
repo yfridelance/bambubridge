@@ -12,6 +12,7 @@ from config import (
     BASE_URL,
     PRINTER_ID,
     PRINTER_NAME,
+    REPO_URL,
     SPOOLMAN_BASE_URL,
     SPOOLMAN_API_URL,
     EXTERNAL_SPOOL_AMS_ID,
@@ -19,7 +20,18 @@ from config import (
 )
 from .common import json_success, json_error, READ_ONLY_MODE, ACTIVE_PRINTER_ID
 
+try:
+    from __version__ import __version__ as APP_VERSION
+except Exception:
+    APP_VERSION = "unknown"
+
 settings_bp = Blueprint("settings", __name__)
+
+
+@settings_bp.route("/version", methods=["GET"])
+def get_version():
+    """Return application version and repository URL."""
+    return json_success({"version": APP_VERSION, "repo_url": REPO_URL})
 
 
 @settings_bp.route("/settings", methods=["GET"])
