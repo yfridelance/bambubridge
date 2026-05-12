@@ -1,3 +1,9 @@
+## [1.1.0-dev.2](https://github.com/yfridelance/bambubridge/compare/v1.1.0-dev.1...v1.1.0-dev.2) (2026-05-12)
+
+### Features
+
+* **prints:** implement print detail page ([3ed1009](https://github.com/yfridelance/bambubridge/commit/3ed100955901c24632707a78b236a9d8f1033a99))
+
 ## [1.1.0-dev.1](https://github.com/yfridelance/bambubridge/compare/v1.0.2-dev.1...v1.1.0-dev.1) (2026-05-12)
 
 ### Features
