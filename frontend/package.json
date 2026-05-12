@@ -1,6 +1,6 @@
 {
   "name": "bambubridge-frontend",
-  "version": "1.1.0-dev.2",
+  "version": "1.1.0-dev.3",
   "type": "module",
   "scripts": {
     "dev": "vite",
