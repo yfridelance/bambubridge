@@ -32,6 +32,37 @@ def clear_active_spool_for_tray(ams_id: int, tray_id: int) -> None:
       spool.setdefault("extra", {})["active_tray"] = json.dumps("")
       break
 
+
+def clear_stale_bambu_assignment_for_tray(ams_id: int, tray_id: int) -> None:
+  """
+  Like clear_active_spool_for_tray, but only clears if the currently
+  mapped spool has a non-empty NFC tag — i.e. it was a tracked Bambu
+  spool that has since been removed.
+
+  A manually assigned spool without an NFC tag (typical for non-Bambu
+  reels) is preserved across MQTT refresh cycles. Otherwise every
+  push_status from the printer would silently wipe the user's
+  assignment.
+  """
+  target = json.dumps(trayUid(ams_id, tray_id))
+  for spool in fetchSpools(cached=True):
+    extras = spool.get("extra") or {}
+    if extras.get("active_tray") != target:
+      continue
+
+    raw_tag = extras.get("tag")
+    parsed_tag = None
+    if raw_tag:
+      try:
+        parsed_tag = json.loads(raw_tag) if isinstance(raw_tag, str) else raw_tag
+      except (json.JSONDecodeError, ValueError):
+        parsed_tag = raw_tag
+
+    if parsed_tag:
+      spoolman_client.patchExtraTags(spool["id"], extras, {"active_tray": json.dumps("")})
+      spool.setdefault("extra", {})["active_tray"] = json.dumps("")
+    return
+
 currency_symbols = {
     "AED": "د.إ", "AFN": "؋", "ALL": "Lek", "AMD": "դր.", "ANG": "ƒ", "AOA": "Kz", 
     "ARS": "$", "AUD": "$", "AWG": "Afl.", "AZN": "₼", "BAM": "KM", "BBD": "$", 
