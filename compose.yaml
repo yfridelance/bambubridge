@@ -1,7 +1,17 @@
-# BambuBridge (formerly OpenSpoolMan)
+# BambuBridge — minimal compose example.
+# For a full setup with SpoolMan see docker-compose.yaml.
+#
+# IMPORTANT: mount targets must be /home/app/... (not /app/...) — the
+# container's WORKDIR is /home/app and that's where the app reads/writes
+# state. Mounting elsewhere silently loses the print history database
+# and thumbnails on every container restart.
 services:
   bambubridge:
     build: .
     env_file: "config.env"
     ports:
       - "8000:8000"
+    volumes:
+      - ./data:/home/app/data            # SQLite print history (critical)
+      - ./prints:/home/app/static/prints # Print thumbnails shown in the UI
+      - ./logs:/home/app/logs            # Application logs (optional)

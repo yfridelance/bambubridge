@@ -141,6 +141,17 @@ SpoolMan can print QR-code stickers for every spool; follow the SpoolMan label g
    docker compose up -d
    ```
 
+> [!IMPORTANT]
+> **Persistent data lives under `/home/app/` in the container.** Mount your host directories to these exact targets — mounting to `/app/...` silently does nothing and the print history database, thumbnails and logs are lost on every restart.
+>
+> | Container path | What | Persistence |
+> | --- | --- | --- |
+> | `/home/app/data` | SQLite print history (`3d_printer_logs.db`) | **critical** |
+> | `/home/app/static/prints` | Print thumbnails shown in the UI | recommended |
+> | `/home/app/logs` | Application logs | optional |
+>
+> Both `docker-compose.yaml` and `compose.yaml` ship with the correct mounts; if you write your own compose file, copy them from there.
+
 </details>
 
 <details>
