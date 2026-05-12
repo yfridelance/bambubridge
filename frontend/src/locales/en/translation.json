@@ -84,7 +84,19 @@
     "running": "Printing",
     "completed": "Finished",
     "aborted": "Cancelled",
-    "failed": "Failed"
+    "failed": "Failed",
+    "notFound": "Print not found",
+    "detail": {
+      "back": "Back to list",
+      "amsSlot": "AMS slot",
+      "gramsUsed": "Used (g)",
+      "gramsBilled": "Billed (g)",
+      "estimated": "estimated",
+      "predictedEnd": "Predicted end",
+      "actualEnd": "Actual end",
+      "spool": "Spool",
+      "total": "Total"
+    }
   },
   "tag": {
     "title": "NFC Tags",
