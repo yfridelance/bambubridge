@@ -35,3 +35,41 @@ workload:
             ENTRY: "{{ .Values.service.main.ports.main.port }}"
             PORT: "{{ .Values.service.main.ports.main.port }}"
             SCHEME: http
+          probes:
+            liveness:
+              enabled: true
+              type: HTTP
+              path: /health
+              port: "{{ .Values.service.main.ports.main.port }}"
+              spec:
+                initialDelaySeconds: 30
+                periodSeconds: 30
+                timeoutSeconds: 5
+                failureThreshold: 6
+            readiness:
+              enabled: true
+              type: HTTP
+              path: /health
+              port: "{{ .Values.service.main.ports.main.port }}"
+              spec:
+                initialDelaySeconds: 10
+                periodSeconds: 10
+                timeoutSeconds: 5
+                failureThreshold: 3
+            startup:
+              enabled: true
+              type: HTTP
+              path: /health
+              port: "{{ .Values.service.main.ports.main.port }}"
+              spec:
+                initialDelaySeconds: 5
+                periodSeconds: 5
+                timeoutSeconds: 5
+                failureThreshold: 30
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
