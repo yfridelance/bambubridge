@@ -35,14 +35,17 @@
     "assign": "Zuweisen",
     "linkToSpoolman": "Mit Spoolman verknüpfen",
     "unknownSpool": "Unbekannte Spule erkannt",
+    "nonBambuSpool": "Non-Bambu-Spule erkannt",
     "remaining": "Verbleibend",
     "humidity": "Feuchtigkeit",
     "temperature": "Temperatur"
   },
   "fill": {
+    "title": "Spule zuweisen",
     "confirmTitle": "Spule dem Fach zuweisen",
     "confirmMessage": "\"{{spool}}\" zu AMS {{ams}}, Fach {{tray}} zuweisen?",
-    "success": "\"{{spool}}\" wurde dem Fach zugewiesen."
+    "success": "\"{{spool}}\" wurde dem Fach zugewiesen.",
+    "detectedColor": "Erkannte Slot-Farbe"
   },
   "spool": {
     "title": "Spulen",
@@ -155,7 +158,8 @@
   "alert": {
     "colorMismatch": "Farbabweichung",
     "materialMismatch": "Materialabweichung",
-    "unmappedTag": "Nicht zugeordneter Bambu-Tag"
+    "unmappedTag": "Nicht zugeordneter Bambu-Tag",
+    "nonBambuDetected": "Non-Bambu-Spule erkannt"
   },
   "issue": {
     "title": "Probleme",
