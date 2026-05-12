@@ -1,3 +1,9 @@
+## [1.2.0-dev.2](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.1...v1.2.0-dev.2) (2026-05-12)
+
+### Bug Fixes
+
+* **ams:** clear stale SpoolMan assignment when slot becomes empty or non-Bambu ([7ef17d5](https://github.com/yfridelance/bambubridge/commit/7ef17d57810eb042859bae7d4206ce82bf0ff59a))
+
 ## [1.2.0-dev.1](https://github.com/yfridelance/bambubridge/compare/v1.1.1-dev.1...v1.2.0-dev.1) (2026-05-12)
 
 ### Features
