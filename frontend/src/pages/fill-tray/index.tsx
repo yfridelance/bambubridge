@@ -23,6 +23,9 @@ import { ColorBadge } from "../../components/common/ColorBadge";
 const { Title } = Typography;
 const { Search } = Input;
 
+/** Sentinel ams_id used by the backend for the printer's external spool slot. */
+const EXTERNAL_SPOOL_AMS_ID = 255;
+
 /** Squared Euclidean distance in RGB — used to sort matching colors first. */
 function colorDistance(a: string, b: string): number {
   const toRgb = (hex: string) => {
@@ -115,6 +118,11 @@ export const FillTrayPage: React.FC = () => {
     );
   };
 
+  const isExternal = amsId != null && parseInt(amsId) === EXTERNAL_SPOOL_AMS_ID;
+  const slotLabel = isExternal
+    ? t("home.externalSpool")
+    : `AMS ${parseInt(amsId ?? "0") + 1}, ${t("home.tray")} ${parseInt(trayId ?? "0") + 1}`;
+
   if (!amsId || !trayId) {
     return (
       <Result
@@ -169,7 +177,7 @@ export const FillTrayPage: React.FC = () => {
               <p>{t("fill.pickSpool")}</p>
               <Descriptions column={2} size="small" style={{ marginTop: 8 }}>
                 <Descriptions.Item label={t("home.tray")}>
-                  AMS {parseInt(amsId) + 1}, {t("home.tray")} {parseInt(trayId) + 1}
+                  {slotLabel}
                 </Descriptions.Item>
                 {trayMaterial && (
                   <Descriptions.Item label={t("spool.material")}>
