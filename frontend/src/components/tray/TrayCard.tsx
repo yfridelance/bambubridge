@@ -1,4 +1,12 @@
-import { Card, Button, Space, Typography, Badge, Progress, Tooltip } from "antd";
+import {
+  Card,
+  Button,
+  Space,
+  Typography,
+  Badge,
+  Progress,
+  Tooltip,
+} from "antd";
 import {
   ExclamationCircleOutlined,
   LinkOutlined,
@@ -25,8 +33,13 @@ export const TrayCard: React.FC<TrayCardProps> = ({
   const { t } = useTranslation();
   const navigate = useNavigate();
 
-  const hasIssue = tray.issue || tray.color_mismatch || tray.unmapped_bambu_tag;
-  const isEmpty = !tray.spool_id && !tray.unmapped_bambu_tag && !tray.is_loaded;
+  const hasIssue =
+    tray.issue || tray.color_mismatch || tray.unmapped_bambu_tag;
+  const isEmpty =
+    !tray.spool_id &&
+    !tray.unmapped_bambu_tag &&
+    !tray.non_bambu_spool &&
+    !tray.is_loaded;
 
   const remainingPercent =
     tray.remaining_g && tray.remaining_g > 0
@@ -34,7 +47,14 @@ export const TrayCard: React.FC<TrayCardProps> = ({
       : 0;
 
   const handleFill = () => {
-    navigate(`/tags?ams=${amsId}&tray=${tray.index}&action=fill`);
+    const params = new URLSearchParams({
+      ams: String(amsId),
+      tray: String(tray.index),
+    });
+    if (tray.material) params.set("material", tray.material);
+    const color = tray.tray_color || tray.color;
+    if (color) params.set("color", color);
+    navigate(`/fill-tray?${params.toString()}`);
   };
 
   const handleLinkBambu = () => {
@@ -51,6 +71,9 @@ export const TrayCard: React.FC<TrayCardProps> = ({
   const getStatusBadge = () => {
     if (tray.unmapped_bambu_tag) {
       return <Badge status="warning" text={t("alert.unmappedTag")} />;
+    }
+    if (tray.non_bambu_spool && !tray.spool_id) {
+      return <Badge status="processing" text={t("alert.nonBambuDetected")} />;
     }
     if (tray.color_mismatch) {
       return <Badge status="warning" text={t("alert.colorMismatch")} />;
@@ -135,8 +158,25 @@ export const TrayCard: React.FC<TrayCardProps> = ({
             </Button>
           </div>
         </div>
+      ) : tray.non_bambu_spool ? (
+        <div>
+          <Text>{t("home.nonBambuSpool")}</Text>
+          {tray.material && (
+            <div>
+              <Text type="secondary">{tray.material}</Text>
+            </div>
+          )}
+        </div>
       ) : isEmpty ? (
-        <div style={{ textAlign: "center", flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <div
+          style={{
+            textAlign: "center",
+            flex: 1,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <Text type="secondary">{t("home.empty")}</Text>
         </div>
       ) : (
@@ -150,7 +190,7 @@ export const TrayCard: React.FC<TrayCardProps> = ({
       {/* Actions */}
       <div style={{ marginTop: "auto" }}>
         <Button
-          type="default"
+          type={tray.non_bambu_spool ? "primary" : "default"}
           icon={<PlusOutlined />}
           onClick={handleFill}
           block

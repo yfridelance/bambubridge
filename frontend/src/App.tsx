@@ -26,6 +26,7 @@ import { HomePage } from "./pages/home";
 import { SpoolsListPage, SpoolShowPage } from "./pages/spools";
 import { PrintsListPage, PrintShowPage } from "./pages/prints";
 import { TagsPage, WriteTagPage, LinkBambuPage } from "./pages/tags";
+import { FillTrayPage } from "./pages/fill-tray";
 import { IssuesPage } from "./pages/issues";
 import { SettingsPage } from "./pages/settings";
 
@@ -149,6 +150,7 @@ function AppContent() {
                   <Route path="write/:spoolId" element={<WriteTagPage />} />
                   <Route path="link-bambu" element={<LinkBambuPage />} />
                 </Route>
+                <Route path="/fill-tray" element={<FillTrayPage />} />
                 <Route path="/issues" element={<IssuesPage />} />
                 <Route path="/settings" element={<SettingsPage />} />
               </Route>

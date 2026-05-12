@@ -35,14 +35,18 @@
     "assign": "Assign",
     "linkToSpoolman": "Link to Spoolman",
     "unknownSpool": "Unknown spool detected",
+    "nonBambuSpool": "Non-Bambu spool detected",
     "remaining": "Remaining",
     "humidity": "Humidity",
     "temperature": "Temperature"
   },
   "fill": {
+    "title": "Assign Spool",
+    "pickSpool": "Pick a SpoolMan spool to assign to this AMS slot. Spools matching the detected color are shown first.",
     "confirmTitle": "Assign Spool to Tray",
     "confirmMessage": "Assign \"{{spool}}\" to AMS {{ams}}, Tray {{tray}}?",
-    "success": "\"{{spool}}\" has been assigned to the tray."
+    "success": "\"{{spool}}\" has been assigned to the tray.",
+    "detectedColor": "Detected slot color"
   },
   "spool": {
     "title": "Spools",
@@ -155,7 +159,8 @@
   "alert": {
     "colorMismatch": "Color mismatch",
     "materialMismatch": "Material mismatch",
-    "unmappedTag": "Unmapped Bambu tag"
+    "unmappedTag": "Unmapped Bambu tag",
+    "nonBambuDetected": "Non-Bambu spool detected"
   },
   "issue": {
     "title": "Issues",
