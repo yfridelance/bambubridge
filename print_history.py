@@ -3,6 +3,7 @@ from datetime import datetime
 from pathlib import Path
 
 from config import PRINT_HISTORY_DB
+from db_migrations import apply_pending_migrations
 
 DEFAULT_DB_NAME = "3d_printer_logs.db"
 
@@ -19,99 +20,9 @@ def _default_db_path() -> Path:
 db_config = {"db_path": str(_default_db_path())}  # Configuration for database location
 
 
-def _ensure_column(cursor: sqlite3.Cursor, table: str, column: str, definition: str) -> None:
-    cursor.execute(f"PRAGMA table_info({table})")
-    columns = {row[1] for row in cursor.fetchall()}
-    if column not in columns:
-        cursor.execute(f"ALTER TABLE {table} ADD COLUMN {column} {definition}")
-
-
 def create_database() -> None:
-    """
-    Ensure the SQLite schema exists (used for both fresh and upgrading databases).
-    """
-    db_path = Path(db_config["db_path"])
-    db_path.parent.mkdir(parents=True, exist_ok=True)
-
-    conn = sqlite3.connect(db_path)
-    cursor = conn.cursor()
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS prints (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            print_date TEXT NOT NULL,
-            file_name TEXT NOT NULL,
-            print_type TEXT NOT NULL,
-            image_file TEXT
-        )
-    ''')
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS filament_usage (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            print_id INTEGER NOT NULL,
-            spool_id INTEGER,
-            filament_type TEXT NOT NULL,
-            color TEXT NOT NULL,
-            grams_used REAL NOT NULL,
-            ams_slot INTEGER NOT NULL,
-            estimated_grams REAL,
-            length_used REAL,
-            estimated_length REAL,
-            FOREIGN KEY (print_id) REFERENCES prints (id) ON DELETE CASCADE
-        )
-    ''')
-
-    cursor.execute('''
-        CREATE TABLE IF NOT EXISTS print_layer_tracking (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            print_id INTEGER NOT NULL UNIQUE,
-            total_layers INTEGER,
-            layers_printed INTEGER,
-            filament_grams_billed REAL,
-            filament_grams_total REAL,
-            status TEXT NOT NULL DEFAULT 'RUNNING',
-            predicted_end_time TEXT,
-            actual_end_time TEXT,
-            FOREIGN KEY (print_id) REFERENCES prints (id) ON DELETE CASCADE
-        )
-    ''')
-
-    _ensure_column(
-        cursor,
-        "filament_usage",
-        "estimated_grams",
-        "REAL",
-    )
-    _ensure_column(
-        cursor,
-        "filament_usage",
-        "length_used",
-        "REAL",
-    )
-    _ensure_column(
-        cursor,
-        "filament_usage",
-        "estimated_length",
-        "REAL",
-    )
-
-    # Ensure column definitions exist for older databases
-    _ensure_column(
-        cursor,
-        "print_layer_tracking",
-        "predicted_end_time",
-        "TEXT",
-    )
-    _ensure_column(
-        cursor,
-        "print_layer_tracking",
-        "actual_end_time",
-        "TEXT",
-    )
-
-    conn.commit()
-    conn.close()
+    """Apply pending schema migrations. Idempotent."""
+    apply_pending_migrations(db_config["db_path"])
 
 
 def insert_print(file_name: str, print_type: str, image_file: str = None, print_date: str = None) -> int:

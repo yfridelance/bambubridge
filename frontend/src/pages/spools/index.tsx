@@ -9,10 +9,14 @@ import {
   Card,
   Typography,
   Progress,
+  Descriptions,
+  Spin,
+  Alert,
 } from "antd";
-import { useList, useNavigation } from "@refinedev/core";
+import { useList, useNavigation, useOne } from "@refinedev/core";
+import { useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { TagOutlined, EyeOutlined } from "@ant-design/icons";
+import { TagOutlined, EyeOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import type { Spool } from "../../types";
 import { ColorBadge } from "../../components/common/ColorBadge";
 
@@ -174,11 +178,117 @@ export const SpoolsListPage: React.FC = () => {
 
 export const SpoolShowPage: React.FC = () => {
   const { t } = useTranslation();
-  // TODO: Implement spool detail page
+  const { list } = useNavigation();
+  const { id } = useParams<{ id: string }>();
+
+  const { result: spool, query } = useOne<Spool>({
+    resource: "spools",
+    id: id || "",
+    queryOptions: { enabled: !!id },
+  });
+
+  if (query?.isLoading) {
+    return (
+      <div style={{ padding: 24, textAlign: "center" }}>
+        <Spin />
+      </div>
+    );
+  }
+
+  if (query?.isError || !spool) {
+    return (
+      <div style={{ padding: 24 }}>
+        <Alert type="error" message={t("spool.notFound")} showIcon />
+        <Button
+          icon={<ArrowLeftOutlined />}
+          onClick={() => list("spools")}
+          style={{ marginTop: 16 }}
+        >
+          {t("spool.detail.back")}
+        </Button>
+      </div>
+    );
+  }
+
+  const remaining = spool.remaining_g ?? 0;
+  const total = spool.weight_g ?? 0;
+  const remainingPct = total > 0 ? Math.min(100, Math.round((remaining / total) * 100)) : 0;
+  const isAssigned =
+    spool.ams_id !== null && spool.ams_id !== undefined && spool.tray_index !== null && spool.tray_index !== undefined;
+
   return (
     <div>
-      <Title level={2}>{t("spool.title")}</Title>
-      <p>Spool detail page - coming soon</p>
+      <Space style={{ marginBottom: 16 }}>
+        <Button icon={<ArrowLeftOutlined />} onClick={() => list("spools")}>
+          {t("spool.detail.back")}
+        </Button>
+      </Space>
+
+      <Card>
+        <Space align="center" size="middle" style={{ marginBottom: 16 }}>
+          <ColorBadge color={spool.color} size={32} />
+          <div>
+            <Title level={3} style={{ margin: 0 }}>
+              {spool.name}
+            </Title>
+            <Space size="small" style={{ marginTop: 4 }}>
+              <Tag color="blue">{spool.material}</Tag>
+              {spool.vendor && <Tag>{spool.vendor}</Tag>}
+              {isAssigned ? (
+                <Tag color="green">
+                  AMS {spool.ams_id} - Tray {(spool.tray_index ?? 0) + 1}
+                </Tag>
+              ) : (
+                <Tag>{t("spool.notAssigned")}</Tag>
+              )}
+            </Space>
+          </div>
+        </Space>
+
+        {total > 0 && (
+          <div style={{ marginBottom: 24 }}>
+            <Progress
+              percent={remainingPct}
+              format={() => `${remaining}g / ${total}g`}
+              status={remainingPct < 10 ? "exception" : "active"}
+            />
+          </div>
+        )}
+
+        <Descriptions column={{ xs: 1, sm: 2 }} bordered size="small">
+          <Descriptions.Item label={t("spool.material")}>{spool.material}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.vendor")}>{spool.vendor || "—"}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.detail.weight")}>{spool.weight_g ?? "—"}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.detail.diameter")}>{spool.diameter_mm ?? "—"}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.remaining")}>
+            {spool.remaining_g !== null && spool.remaining_g !== undefined ? `${spool.remaining_g} g` : "—"}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("spool.detail.remainingLength")}>
+            {spool.remaining_length_mm ?? "—"}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("spool.location")}>{spool.location || "—"}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.tag")}>
+            {spool.tag ? (
+              <Tag icon={<TagOutlined />}>{spool.tag}</Tag>
+            ) : (
+              <span style={{ color: "#999" }}>{t("spool.noTag")}</span>
+            )}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("spool.detail.amsSlot")}>
+            {isAssigned ? `AMS ${spool.ams_id} - Tray ${(spool.tray_index ?? 0) + 1}` : "—"}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("spool.lastUsed")}>{spool.last_used || "—"}</Descriptions.Item>
+          <Descriptions.Item label={t("spool.detail.registered")}>{spool.registered || "—"}</Descriptions.Item>
+        </Descriptions>
+
+        {spool.filament_extra && Object.keys(spool.filament_extra).length > 0 && (
+          <Card size="small" title={t("spool.detail.extra")} style={{ marginTop: 16 }}>
+            <pre style={{ margin: 0, fontSize: 12 }}>
+              {JSON.stringify(spool.filament_extra, null, 2)}
+            </pre>
+          </Card>
+        )}
+      </Card>
     </div>
   );
 };
