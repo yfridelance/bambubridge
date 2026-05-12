@@ -1,3 +1,9 @@
+## [1.2.0-dev.4](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2026-05-12)
+
+### Bug Fixes
+
+* **ams:** preserve manual spool assignment for non-Bambu slots ([61c6598](https://github.com/yfridelance/bambubridge/commit/61c6598e08f0250318097ac82c8522bcab14ab42))
+
 ## [1.2.0-dev.3](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.2...v1.2.0-dev.3) (2026-05-12)
 
 ### Features
