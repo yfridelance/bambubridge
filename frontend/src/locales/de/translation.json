@@ -84,7 +84,19 @@
     "running": "Druckt",
     "completed": "Fertig",
     "aborted": "Abgebrochen",
-    "failed": "Fehlgeschlagen"
+    "failed": "Fehlgeschlagen",
+    "notFound": "Druck nicht gefunden",
+    "detail": {
+      "back": "Zurück zur Liste",
+      "amsSlot": "AMS-Slot",
+      "gramsUsed": "Verbraucht (g)",
+      "gramsBilled": "Verrechnet (g)",
+      "estimated": "geschätzt",
+      "predictedEnd": "Voraussichtliches Ende",
+      "actualEnd": "Tatsächliches Ende",
+      "spool": "Spule",
+      "total": "Gesamt"
+    }
   },
   "tag": {
     "title": "NFC-Tags",
