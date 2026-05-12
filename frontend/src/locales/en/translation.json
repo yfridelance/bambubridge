@@ -15,7 +15,8 @@
     "yes": "Yes",
     "no": "No",
     "all": "All",
-    "status": "Status"
+    "status": "Status",
+    "view": "View"
   },
   "nav": {
     "home": "Home",
