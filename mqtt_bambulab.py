@@ -20,7 +20,7 @@ from config import (
     LOG_DIR,
 )
 from messages import GET_VERSION, PUSH_ALL, AMS_FILAMENT_SETTING
-from spoolman_service import spendFilaments, setActiveTray, fetchSpools, clear_active_spool_for_tray
+from spoolman_service import spendFilaments, setActiveTray, fetchSpools, clear_active_spool_for_tray, clear_stale_bambu_assignment_for_tray
 from tools_3mf import getMetaDataFrom3mf
 import time
 import copy
@@ -513,10 +513,11 @@ def on_message(client, userdata, msg):
             if not found and tray_uuid == "00000000000000000000000000000000":
               log("      - non Bambulab Spool!")
               tray["non_bambu_spool"] = True
-              # Free the previous SpoolMan-side assignment so the UI stops
-              # showing the old spool as active. Do NOT clear the printer-side
-              # slot — the user has manually configured material/color there.
-              clear_active_spool_for_tray(ams['id'], tray['id'])
+              # Free a stale Bambu-side assignment so the UI stops showing the
+              # previous tagged spool as active. A spool the user has manually
+              # assigned to this slot (no NFC tag) is preserved — otherwise
+              # every periodic push_status would wipe the assignment.
+              clear_stale_bambu_assignment_for_tray(ams['id'], tray['id'])
             elif not found:
               log(f"      - Not found. Looking for tag: {tray_uuid}")
               # Log all spools with tags for debugging
