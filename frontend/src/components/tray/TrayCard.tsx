@@ -1,4 +1,3 @@
-import { useState } from "react";
 import {
   Card,
   Button,
@@ -17,7 +16,6 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import type { Tray } from "../../types";
 import { ColorBadge } from "../common/ColorBadge";
-import { FillTrayModal } from "./FillTrayModal";
 
 const { Text, Title } = Typography;
 
@@ -34,7 +32,6 @@ export const TrayCard: React.FC<TrayCardProps> = ({
 }) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const [fillOpen, setFillOpen] = useState(false);
 
   const hasIssue =
     tray.issue || tray.color_mismatch || tray.unmapped_bambu_tag;
@@ -49,7 +46,16 @@ export const TrayCard: React.FC<TrayCardProps> = ({
       ? Math.min(100, Math.round((tray.remaining_g / 1000) * 100))
       : 0;
 
-  const openFill = () => setFillOpen(true);
+  const handleFill = () => {
+    const params = new URLSearchParams({
+      ams: String(amsId),
+      tray: String(tray.index),
+    });
+    if (tray.material) params.set("material", tray.material);
+    const color = tray.tray_color || tray.color;
+    if (color) params.set("color", color);
+    navigate(`/fill-tray?${params.toString()}`);
+  };
 
   const handleLinkBambu = () => {
     const params = new URLSearchParams({
@@ -186,7 +192,7 @@ export const TrayCard: React.FC<TrayCardProps> = ({
         <Button
           type={tray.non_bambu_spool ? "primary" : "default"}
           icon={<PlusOutlined />}
-          onClick={openFill}
+          onClick={handleFill}
           block
           size="small"
           disabled={!!tray.spool_id || !!tray.unmapped_bambu_tag}
@@ -194,14 +200,6 @@ export const TrayCard: React.FC<TrayCardProps> = ({
           {t("home.assign")}
         </Button>
       </div>
-
-      <FillTrayModal
-        open={fillOpen}
-        amsId={amsId}
-        trayIndex={tray.index}
-        trayColor={tray.tray_color || tray.color}
-        onClose={() => setFillOpen(false)}
-      />
     </Card>
   );
 };

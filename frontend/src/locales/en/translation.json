@@ -42,6 +42,7 @@
   },
   "fill": {
     "title": "Assign Spool",
+    "pickSpool": "Pick a SpoolMan spool to assign to this AMS slot. Spools matching the detected color are shown first.",
     "confirmTitle": "Assign Spool to Tray",
     "confirmMessage": "Assign \"{{spool}}\" to AMS {{ams}}, Tray {{tray}}?",
     "success": "\"{{spool}}\" has been assigned to the tray.",

@@ -42,6 +42,7 @@
   },
   "fill": {
     "title": "Spule zuweisen",
+    "pickSpool": "Wähle eine SpoolMan-Spule für diesen AMS-Slot. Spulen mit ähnlicher Farbe stehen oben.",
     "confirmTitle": "Spule dem Fach zuweisen",
     "confirmMessage": "\"{{spool}}\" zu AMS {{ams}}, Fach {{tray}} zuweisen?",
     "success": "\"{{spool}}\" wurde dem Fach zugewiesen.",
