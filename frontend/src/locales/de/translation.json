@@ -58,7 +58,16 @@
     "assignedTo": "Zugewiesen an",
     "assigned": "Zugewiesen",
     "notAssigned": "Nicht zugewiesen",
-    "notFound": "Spule nicht gefunden"
+    "notFound": "Spule nicht gefunden",
+    "detail": {
+      "weight": "Gewicht (g)",
+      "diameter": "Durchmesser (mm)",
+      "remainingLength": "Restlänge (mm)",
+      "registered": "Registriert",
+      "extra": "Zusatzfelder",
+      "amsSlot": "AMS-Slot",
+      "back": "Zurück zur Liste"
+    }
   },
   "print": {
     "title": "Druckverlauf",

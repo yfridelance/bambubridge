@@ -58,7 +58,16 @@
     "assignedTo": "Assigned to",
     "assigned": "Assigned",
     "notAssigned": "Not assigned",
-    "notFound": "Spool not found"
+    "notFound": "Spool not found",
+    "detail": {
+      "weight": "Weight (g)",
+      "diameter": "Diameter (mm)",
+      "remainingLength": "Remaining length (mm)",
+      "registered": "Registered",
+      "extra": "Extra fields",
+      "amsSlot": "AMS slot",
+      "back": "Back to list"
+    }
   },
   "print": {
     "title": "Print History",
