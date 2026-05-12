@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import { VitePWA } from "vite-plugin-pwa";
@@ -86,5 +87,33 @@ export default defineConfig({
   build: {
     outDir: "dist",
     sourcemap: true,
+    chunkSizeWarningLimit: 1100,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          react: ["react", "react-dom", "react-router", "react-router-dom"],
+          antd: ["antd"],
+          "antd-icons": ["@ant-design/icons"],
+          refine: [
+            "@refinedev/core",
+            "@refinedev/antd",
+            "@refinedev/react-router",
+            "@refinedev/simple-rest",
+          ],
+          i18n: [
+            "i18next",
+            "react-i18next",
+            "i18next-browser-languagedetector",
+            "i18next-http-backend",
+          ],
+        },
+      },
+    },
+  },
+  test: {
+    globals: true,
+    environment: "jsdom",
+    setupFiles: ["./src/test/setup.ts"],
+    css: false,
   },
 });
