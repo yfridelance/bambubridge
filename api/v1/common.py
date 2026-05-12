@@ -159,6 +159,8 @@ def serialize_tray(tray: Dict[str, Any], spools: List[Dict[str, Any]], ams_id: i
         issue_type = "color_mismatch"
     elif tray.get("unmapped_bambu_tag"):
         issue_type = "unmapped_tag"
+    elif tray.get("non_bambu_spool"):
+        issue_type = "non_bambu_spool"
 
     return {
         "index": tray_id,
@@ -178,6 +180,7 @@ def serialize_tray(tray: Dict[str, Any], spools: List[Dict[str, Any]], ams_id: i
         "issue": issue,
         "issue_type": issue_type,
         "unmapped_bambu_tag": tray.get("unmapped_bambu_tag"),
+        "non_bambu_spool": bool(tray.get("non_bambu_spool")),
     }
 
 

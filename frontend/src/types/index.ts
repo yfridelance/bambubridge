@@ -55,6 +55,7 @@ export interface Tray {
   issue: boolean;
   issue_type?: string | null;
   unmapped_bambu_tag?: string | null;
+  non_bambu_spool?: boolean;
 }
 
 // Spool Types

@@ -512,6 +512,11 @@ def on_message(client, userdata, msg):
 
             if not found and tray_uuid == "00000000000000000000000000000000":
               log("      - non Bambulab Spool!")
+              tray["non_bambu_spool"] = True
+              # Free the previous SpoolMan-side assignment so the UI stops
+              # showing the old spool as active. Do NOT clear the printer-side
+              # slot — the user has manually configured material/color there.
+              clear_active_spool_for_tray(ams['id'], tray['id'])
             elif not found:
               log(f"      - Not found. Looking for tag: {tray_uuid}")
               # Log all spools with tags for debugging
@@ -531,6 +536,9 @@ def on_message(client, userdata, msg):
             log(
                 f"    - [{num2letter(ams['id'])}{tray['id']}]")
             log("      - No Spool!")
+            # Slot is empty — free any SpoolMan-side assignment that still
+            # points at it so the UI stops showing the previous spool.
+            clear_active_spool_for_tray(ams['id'], tray['id'])
 
   except Exception:
     traceback.print_exc()
