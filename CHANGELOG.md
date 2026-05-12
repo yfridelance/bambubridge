@@ -1,3 +1,9 @@
+## [1.1.1-dev.1](https://github.com/yfridelance/bambubridge/compare/v1.1.0...v1.1.1-dev.1) (2026-05-12)
+
+### Bug Fixes
+
+* **frontend:** revert manualChunks to stop production white screen ([a22f9c0](https://github.com/yfridelance/bambubridge/commit/a22f9c0dc8d9bd83d63a5cca8e5a8db199e34124)), closes [#20](https://github.com/yfridelance/bambubridge/issues/20)
+
 ## [1.1.0-dev.4](https://github.com/yfridelance/bambubridge/compare/v1.1.0-dev.3...v1.1.0-dev.4) (2026-05-12)
 
 ### Bug Fixes
