@@ -1,3 +1,9 @@
+## [1.2.0-dev.6](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.5...v1.2.0-dev.6) (2026-05-13)
+
+### Features
+
+* **ha:** publish AMS tray issues to Home Assistant via MQTT discovery ([e420361](https://github.com/yfridelance/bambubridge/commit/e420361d1013daaf24a4cfd2be57265dd474d11c))
+
 ## [1.2.0-dev.5](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-05-13)
 
 ### Bug Fixes

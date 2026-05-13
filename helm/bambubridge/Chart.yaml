@@ -1,9 +1,9 @@
 apiVersion: v2
-appVersion: 1.2.0-dev.5
+appVersion: 1.2.0-dev.6
 description: BambuBridge - Bambu Lab Filament Bridge connecting SpoolMan with Bambu Lab printers
 name: bambubridge
 type: application
-version: 1.2.0-dev.5
+version: 1.2.0-dev.6
 dependencies:
   - name: common
     version: 25.1.7
