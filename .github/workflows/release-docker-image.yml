@@ -56,9 +56,25 @@ jobs:
           fetch-depth: 0
           ref: ${{ github.event.inputs.tag }}
 
-      # Default checkout (workflow_call, manual run without tag)
+      # When called from release.yml, semantic-release has just pushed a
+      # chore(release) commit that bumps __version__.py / Chart.yaml /
+      # package.json and tagged it. We must check out that tag — otherwise
+      # the build runs against the pre-release SHA and the image is
+      # tagged with one version while its embedded __version__.py still
+      # shows the previous one.
+      # github.event_name reflects the caller's event (e.g. 'push') when
+      # invoked via workflow_call, so we discriminate by the presence of
+      # the version input instead.
+      - name: Checkout release tag for workflow_call
+        if: ${{ github.event_name != 'workflow_dispatch' && inputs.version != '' }}
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: v${{ inputs.version }}
+
+      # Default checkout (manual dispatch without tag)
       - name: Checkout code (default)
-        if: ${{ !(github.event_name == 'workflow_dispatch' && github.event.inputs.tag != '') }}
+        if: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag == '' }}
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
