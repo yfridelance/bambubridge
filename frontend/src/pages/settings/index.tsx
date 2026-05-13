@@ -98,6 +98,40 @@ export const SettingsPage: React.FC = () => {
         </Descriptions>
       </Card>
 
+      <Card title={t("settings.homeAssistant")} style={{ marginBottom: 24 }}>
+        <Descriptions column={1}>
+          <Descriptions.Item label={t("settings.haEnabled")}>
+            <Tag color={settings?.ha_mqtt?.enabled ? "green" : "default"}>
+              {settings?.ha_mqtt?.enabled ? t("common.yes") : t("common.no")}
+            </Tag>
+          </Descriptions.Item>
+          <Descriptions.Item label={t("settings.haStatus")}>
+            {!settings?.ha_mqtt?.enabled ? (
+              <Tag>{t("settings.haDisabled")}</Tag>
+            ) : settings?.ha_mqtt?.connected ? (
+              <Tag icon={<WifiOutlined />} color="success">
+                {t("settings.haConnected")}
+              </Tag>
+            ) : (
+              <Tag icon={<DisconnectOutlined />} color="warning">
+                {t("settings.haDisconnected")}
+              </Tag>
+            )}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("settings.haHost")}>
+            {settings?.ha_mqtt?.host
+              ? `${settings.ha_mqtt.host}:${settings.ha_mqtt.port}${settings.ha_mqtt.tls ? " (TLS)" : ""}`
+              : "-"}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("settings.haDiscoveryPrefix")}>
+            {settings?.ha_mqtt?.discovery_prefix || "-"}
+          </Descriptions.Item>
+          <Descriptions.Item label={t("settings.haBaseTopic")}>
+            {settings?.ha_mqtt?.base_topic || "-"}
+          </Descriptions.Item>
+        </Descriptions>
+      </Card>
+
       <Card title="System">
         <Descriptions column={1}>
           <Descriptions.Item label="Base URL">

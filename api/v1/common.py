@@ -98,6 +98,23 @@ def find_spool_for_tray(spools: List[Dict[str, Any]], ams_id: int, tray_id: int)
     return None
 
 
+def derive_tray_issue_type(tray: Dict[str, Any]) -> Optional[str]:
+    """Derive the issue type for a raw tray dict, or None if no issue is set.
+
+    Mirrors the precedence used by serialize_tray so external consumers
+    (Home Assistant MQTT publisher) see the same classification as the API.
+    """
+    if tray.get("mismatch"):
+        return "material_mismatch"
+    if tray.get("color_mismatch"):
+        return "color_mismatch"
+    if tray.get("unmapped_bambu_tag"):
+        return "unmapped_tag"
+    if tray.get("non_bambu_spool"):
+        return "non_bambu_spool"
+    return None
+
+
 def serialize_tray(tray: Dict[str, Any], spools: List[Dict[str, Any]], ams_id: int) -> Dict[str, Any]:
     """Serialize a tray object for API response."""
     tray_id = int(tray.get("id") or 0)
@@ -152,15 +169,7 @@ def serialize_tray(tray: Dict[str, Any], spools: List[Dict[str, Any]], ams_id: i
 
     # Get issue info from augmented tray data if available
     issue = tray.get("issue", False)
-    issue_type = None
-    if tray.get("mismatch"):
-        issue_type = "material_mismatch"
-    elif tray.get("color_mismatch"):
-        issue_type = "color_mismatch"
-    elif tray.get("unmapped_bambu_tag"):
-        issue_type = "unmapped_tag"
-    elif tray.get("non_bambu_spool"):
-        issue_type = "non_bambu_spool"
+    issue_type = derive_tray_issue_type(tray)
 
     return {
         "index": tray_id,

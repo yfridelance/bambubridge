@@ -192,6 +192,7 @@ SpoolMan can print QR-code stickers for every spool; follow the SpoolMan label g
   - set `DISABLE_MISMATCH_WARNING` to `True` to hide mismatch warnings in the UI (mismatches are still detected and logged to `logs/filament_mismatch.json`, including the detected color difference when applicable).
   - set `CLEAR_ASSIGNMENT_WHEN_EMPTY` to `True` if you want BambuBridge to clear any SpoolMan assignment and reset the AMS tray whenever the printer reports no spool in that slot.
   - set `COLOR_DISTANCE_TOLERANCE` to an integer (default `40`) if you want to make the perceptual ΔE threshold for tray/spool color mismatch warnings stricter or more lenient; when either side (AMS tray or SpoolMan spool) lacks a color the warning is skipped and the UI shows "Color not set".
+ - Optional: enable **Home Assistant integration** via MQTT (see [Home Assistant notifications](#home-assistant-notifications) below).
  - By default, the app reads `data/3d_printer_logs.db` for print history; override it through `BAMBUBRIDGE_PRINT_HISTORY_DB` (or legacy `OPENSPOOLMAN_PRINT_HISTORY_DB`) or via the screenshot helper (which targets `data/demo.db` by default).
 
  - Run SpoolMan.
@@ -239,6 +240,48 @@ This feature has currently following issues/drawbacks:
  - Don't know if it works with LAN mode, since it downloads the 3MF file from cloud
  - Not tested with multiple AMS systems
  - Not handling the mismatch between the SpoolMan and AMS (if you don't have the Active Tray information correct in spoolman it won't work properly)
+
+### Home Assistant notifications
+
+BambuBridge can publish AMS tray-issue events to a Home Assistant MQTT broker so HA drives the notification (mobile push, voice, dashboard, …). It uses **MQTT Discovery** — each tray shows up as a sensor under a `BambuBridge` device without any manual HA configuration.
+
+Published states per tray: `ok`, `unmapped_tag`, `non_bambu_spool`, `material_mismatch`, `color_mismatch`. Material/color mismatch is only published while a print is `PREPARE` or `RUNNING`.
+
+**Configuration (env vars)** — see `config.env.template`:
+
+```
+BAMBUBRIDGE_HA_MQTT_ENABLED=True
+BAMBUBRIDGE_HA_MQTT_HOST=homeassistant.local
+BAMBUBRIDGE_HA_MQTT_PORT=1883
+BAMBUBRIDGE_HA_MQTT_USER=bambubridge
+BAMBUBRIDGE_HA_MQTT_PASSWORD=secret
+BAMBUBRIDGE_PUBLIC_URL=https://bambubridge.local   # makes HA's "Visit device" deep-link back here
+```
+
+Two MQTT touch points you can use as automation triggers:
+
+- **Sensor states** at `bambubridge/ams/<ams_id>/tray/<tray_id>/issue/state` (retained, so HA shows the current value after restart).
+- **Event topic** `bambubridge/events/tray_issue` (not retained) — preferred for notifications because it only fires on transitions and carries the full payload (`previous`, `current`, `ams_id`, `tray_id`, `tray_color`, `tray_uuid`, `unmapped_bambu_tag`, `configuration_url`).
+
+**Example HA automation** — notify on any new tray issue with a deep-link back to BambuBridge:
+
+```yaml
+alias: BambuBridge tray issue
+trigger:
+  - platform: mqtt
+    topic: bambubridge/events/tray_issue
+condition:
+  - "{{ trigger.payload_json.current != 'ok' }}"
+action:
+  - service: notify.mobile_app_yourphone
+    data:
+      title: "BambuBridge: {{ trigger.payload_json.current }}"
+      message: >
+        AMS {{ trigger.payload_json.ams_id }} Tray {{ trigger.payload_json.tray_id }}
+        — {{ trigger.payload_json.current }}
+      data:
+        url: "{{ trigger.payload_json.configuration_url }}"
+```
 
 ### Notes:
  - If you change the BASE_URL of this app, you will need to reconfigure all NFC TAGS

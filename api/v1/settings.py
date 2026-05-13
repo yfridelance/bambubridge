@@ -6,10 +6,17 @@ import traceback
 
 from flask import Blueprint
 
+import ha_mqtt
 import spoolman_client
 from config import (
     AUTO_SPEND,
     BASE_URL,
+    HA_MQTT_BASE_TOPIC,
+    HA_MQTT_DISCOVERY_PREFIX,
+    HA_MQTT_ENABLED,
+    HA_MQTT_HOST,
+    HA_MQTT_PORT,
+    HA_MQTT_TLS,
     PRINTER_ID,
     PRINTER_NAME,
     REPO_URL,
@@ -48,6 +55,15 @@ def get_settings():
             "read_only_mode": READ_ONLY_MODE,
             "external_spool_ams_id": EXTERNAL_SPOOL_AMS_ID,
             "external_spool_id": EXTERNAL_SPOOL_ID,
+            "ha_mqtt": {
+                "enabled": HA_MQTT_ENABLED,
+                "connected": ha_mqtt.is_connected(),
+                "host": HA_MQTT_HOST,
+                "port": HA_MQTT_PORT,
+                "tls": HA_MQTT_TLS,
+                "discovery_prefix": HA_MQTT_DISCOVERY_PREFIX,
+                "base_topic": HA_MQTT_BASE_TOPIC,
+            },
         })
     except Exception as exc:
         traceback.print_exc()
