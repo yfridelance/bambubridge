@@ -22,6 +22,9 @@ READ_ONLY_MODE = (not USE_TEST_DATA) and LIVE_READONLY
 if not USE_TEST_DATA:
   mqtt_bambulab.init_mqtt()
 
+import ha_mqtt
+ha_mqtt.init()
+
 app = Flask(__name__)
 
 # React frontend directory
@@ -163,6 +166,10 @@ def _graceful_shutdown(signum, _frame):
     mqtt_bambulab.cleanup()
   except Exception as exc:
     log(f"⚠️ mqtt cleanup failed: {exc}")
+  try:
+    ha_mqtt.cleanup()
+  except Exception as exc:
+    log(f"⚠️ ha_mqtt cleanup failed: {exc}")
   sys.exit(0)
 
 

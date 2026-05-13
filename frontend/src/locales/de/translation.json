@@ -148,7 +148,16 @@
     "online": "Online",
     "offline": "Offline",
     "spoolman": "Spoolman-URL",
-    "autoSpend": "Filament automatisch verbuchen"
+    "autoSpend": "Filament automatisch verbuchen",
+    "homeAssistant": "Home Assistant",
+    "haEnabled": "Aktiviert",
+    "haStatus": "Verbindung",
+    "haConnected": "Verbunden",
+    "haDisconnected": "Getrennt",
+    "haDisabled": "Deaktiviert",
+    "haHost": "Broker",
+    "haDiscoveryPrefix": "Discovery-Präfix",
+    "haBaseTopic": "Basis-Topic"
   },
   "error": {
     "printerOffline": "Drucker ist offline. Bitte Verbindung prüfen.",

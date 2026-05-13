@@ -541,6 +541,13 @@ def on_message(client, userdata, msg):
             # points at it so the UI stops showing the previous spool.
             clear_active_spool_for_tray(ams['id'], tray['id'])
 
+    # Notify Home Assistant about tray-issue state transitions.
+    try:
+      import ha_mqtt
+      ha_mqtt.publish_tray_state_diff(PRINTER_STATE)
+    except Exception as exc:
+      log(f"⚠️ ha_mqtt notify hook failed: {exc}")
+
   except Exception:
     traceback.print_exc()
 

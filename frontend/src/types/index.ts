@@ -131,6 +131,16 @@ export interface PrintListResponse {
 }
 
 // Settings Types
+export interface HaMqttSettings {
+  enabled: boolean;
+  connected: boolean;
+  host: string;
+  port: number;
+  tls: boolean;
+  discovery_prefix: string;
+  base_topic: string;
+}
+
 export interface Settings {
   printer_id: string;
   printer_name?: string;
@@ -141,6 +151,7 @@ export interface Settings {
   read_only_mode: boolean;
   external_spool_ams_id: number;
   external_spool_id: number;
+  ha_mqtt?: HaMqttSettings;
 }
 
 // API Response Types

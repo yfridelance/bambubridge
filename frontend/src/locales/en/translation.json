@@ -148,7 +148,16 @@
     "online": "Online",
     "offline": "Offline",
     "spoolman": "Spoolman URL",
-    "autoSpend": "Auto-spend filament"
+    "autoSpend": "Auto-spend filament",
+    "homeAssistant": "Home Assistant",
+    "haEnabled": "Enabled",
+    "haStatus": "Connection",
+    "haConnected": "Connected",
+    "haDisconnected": "Disconnected",
+    "haDisabled": "Disabled",
+    "haHost": "Broker",
+    "haDiscoveryPrefix": "Discovery prefix",
+    "haBaseTopic": "Base topic"
   },
   "error": {
     "printerOffline": "Printer is offline. Please check the connection.",
