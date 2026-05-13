@@ -1,3 +1,9 @@
+## [1.2.0-dev.5](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.4...v1.2.0-dev.5) (2026-05-13)
+
+### Bug Fixes
+
+* **ci:** build docker image from the release tag, not the trigger SHA ([a3074a9](https://github.com/yfridelance/bambubridge/commit/a3074a9b14feb1bc147965ff2b3c7df2b175c46c))
+
 ## [1.2.0-dev.4](https://github.com/yfridelance/bambubridge/compare/v1.2.0-dev.3...v1.2.0-dev.4) (2026-05-12)
 
 ### Bug Fixes
